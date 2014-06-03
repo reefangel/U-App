@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<!--
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+     KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+-->
+<html>
+    <head>
+        <meta charset="utf-8" />
+        <meta name="format-detection" content="telephone=no" />
+        <!-- WARNING: for iOS 7, remove the width=device-width and height=device-height attributes. See https://issues.apache.org/jira/browse/CB-4323 -->
+        <meta name="viewport" content="user-scalable=no, initial-scale=.5, maximum-scale=.5, minimum-scale=.5, target-densitydpi=device-dpi" />
+        <link rel="stylesheet" type="text/css" href="css/index.css" />
+        <meta name="msapplication-tap-highlight" content="no" />
+        <link rel="stylesheet" href="css/jquery.mobile-1.4.2.min.css" />
+        <script src="js/jquery-1.9.1.min.js"></script>
+        <script src="js/jquery.mobile-1.4.2.min.js"></script> 
+        <title>Reef Angel U-App</title>
+    </head>
+    <body>
+        <div id="panel-fixed-page1" class="jqm-demos" data-role="page" data-url="panel-fixed-page1" data-title="Reef Angel U-App">
+	        <div data-role="header" data-position="fixed" data-theme="b">
+                <h1>Reef Angel U-App</h1>
+            </div><!-- /header -->
+            <div class="ui-content" role="main">
+                <div class="logo"></div>
+                <div class="logotext">monitor your reef tank anytime, anywhere</div>
+                <div class=paramstable  id=controller_form data-message="-1">
+                    <div><label for="txt_controller_port">Name:</label>
+<input type="text" id="txt_controller_name" /></div>
+                    <div><label for="txt_controller_ip">IP address:</label>
+<input type="text" id="txt_controller_ip" /></div>
+                    <div><label for="txt_controller_port">Port:</label>
+<input type="text" id="txt_controller_port" /></div>
+                    <div><button id="save_settings">Save</button>
+                </div>
+            </div><!-- /content -->
+        </div>    
+		<script type="text/javascript" src="cordova.js"></script>
+        <script type="text/javascript" src="js/index.js"></script>
+        <script>
+		if (localStorage.getItem("num_controllers")>0)
+			window.location.href = 'index.html';
+		</script>
+    </body>
+</html>

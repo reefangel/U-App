@@ -24,7 +24,7 @@ body {
     -webkit-touch-callout: none;                /* prevent callout to copy image, etc when tap to hold */
     -webkit-text-size-adjust: none;             /* prevent webkit from resizing text to fit */
     -webkit-user-select: none;                  /* prevent copy paste, to allow, change 'none' to 'text' */
-    background-color:#FFFFFF;
+    background-color:#FFFFFF !important;
     background-attachment:fixed;
     font-family:'HelveticaNeue-Light', 'HelveticaNeue', Helvetica, Arial, sans-serif;
     font-size:12px;
@@ -115,7 +115,7 @@ h1 {
 	margin:0px auto;
     height:107px;
     width:280px;
-	margin-top:30px;
+	margin-top:20px;
 }
 
 .logotext {
@@ -134,8 +134,6 @@ h1 {
 
 
 footer {
-	bottom: 0px;
-	position:absolute;
 	background-color: #007ef6;
     display: table;
     height: 63px;
@@ -154,6 +152,7 @@ footer li {
 	margin:0px auto;
 	width: 200px;
 	height: 84px;
+	margin-bottom: 20px;
 }
 
 .pagerelay {
@@ -161,6 +160,7 @@ footer li {
 	margin:0px auto;
 	width: 200px;
 	height: 84px;
+	margin-bottom: 20px;
 }
 
 .pagehistory {
@@ -168,6 +168,7 @@ footer li {
 	margin:0px auto;
 	width: 200px;
 	height: 84px;
+	margin-bottom: 20px;
 }
 
 .pagesettings {
@@ -175,33 +176,105 @@ footer li {
 	margin:0px auto;
 	width: 200px;
 	height: 84px;
+	margin-bottom: 20px;
 }
 
 .paramstable {
     display: table;
     height: 63px;
     width: 100%;
-	margin-top: 20px;
 }
 
 .paramstable li {
     display: table-cell;
     height: 63px;
-    width: 25%;
+    width: 100%;
     text-align: center;
 	white-space: nowrap;
 }
 
 .paramslabel{
-	font-size:1.5em;
+	font-size:1.3em;
 	font-weight:bold;
+	float: left;
+	width:50%;
+	text-align:right;
+	padding-right: 20px;
+	padding-top: 2px;
 }
 
 .paramsvalue{
-	font-size:2em;
+	font-size:1.5em;
 	font-weight:bold;
+	color: #007ef6;
+}
+
+.relaylabel{
+	font-size:1.1em;
+	font-weight:bold;
+	padding-top: 18px;
+	height:30px !important;
+}
+
+.relayvalue{
+	padding-right: 10px;
+	font-size:1.5em;
+	font-weight:bold;
+	color: #007ef6;
+	float: left;
+	min-width:150px !important;
+	height:30px !important;
+}
+
+.relaystatus{
+	float: left;
+	padding-top: 18px;
+	height:30px !important;
+	width: 35px !important;
+}
+
+.refreshbutton{
+	cursor:pointer;
+	padding:3px !important;	
+	margin-top:3px !important;
+	margin-right:3px !important;
 }
 
 .refreshicon{
 	cursor:pointer;
+	padding:3px !important;	
+}
+
+.ui-content, .ui-mobile, .ui-page-theme-a, .ui-panel-wrapper {
+    background-color:#FFFFFF !important;
+}
+
+.ui-li-static{
+	padding:0 !important;
+}
+
+h3 {
+	margin:0 !important;
+}
+
+.mintab{
+	min-width:33%;
+}
+
+.hiddentab{
+	display:none;
+}
+
+.relaybutton{
+	padding: 3px 12px 3px 12px !important;
+	font-size: .6em !important;
+}
+
+.controllerselect{
+	margin:0px !important;
+	padding:0px !important;
+}
+
+.ui-select{
+	margin:3px !important;
 }
