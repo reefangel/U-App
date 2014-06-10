@@ -69,10 +69,34 @@
                         </div>
                     </div>
                     <div id="dimmingtab" class="ui-content">
-                    	<h1>Dimming</h1>
+					    <label for="pwmdinput" id="pwmd1n" class="dimminglabel"></label>
+                        <div class="dimmingvalue" id="pwmd">0%</div>
+                        <input id="pwmdinput" name="pwmdinput" value="0" type="range" max="100" min="0" data-highlight="true" disabled="disabled" data-mini="true">                        
+					    <label for="pwmainput" id="pwma1n" class="dimminglabel"></label>
+                        <div class="dimmingvalue" id="pwma">0%</div>
+                        <input id="pwmainput" name="pwmainput" value="0" type="range" max="100" min="0" data-highlight="true" disabled="disabled" data-mini="true">                        
                     </div>
                     <div id="waterleveltab" class="hiddentab">
-                    	<h1>Water Level</h1>
+                        <div class=col-group>
+                            <div class=waterdiv><div id=wln></div><div class=watervalue id="wl"></div></div>
+                            <div><div class="container"><div class="glass"><div id="wllevel" class=waterlevel></div></div></div></div>
+                        </div>
+                        <div class=col-group>
+                            <div class=waterdiv><div id=wl1n></div><div class=watervalue id="wl1"></div></div>
+                            <div><div class="container"><div class="glass"><div id="wl1level" class=waterlevel></div></div></div></div>
+                        </div>
+                        <div class=col-group>
+                            <div class=waterdiv><div id=wl2n></div><div class=watervalue id="wl2"></div></div>
+                            <div><div class="container"><div class="glass"><div id="wl2level" class=waterlevel></div></div></div></div>
+                        </div>
+                        <div class=col-group>
+                            <div class=waterdiv><div id=wl3n></div><div class=watervalue id="wl3"></div></div>
+                            <div><div class="container"><div class="glass"><div id="wl3level" class=waterlevel></div></div></div></div>
+                        </div>
+                        <div class=col-group>
+                            <div class=waterdiv><div id=wl4n></div><div class=watervalue id="wl4"></div></div>
+                            <div><div class="container"><div class="glass"><div id="wl4level" class=waterlevel></div></div></div></div>
+                        </div>
                     </div>
                     <div id="aitab" class="hiddentab">
                     	<h1>Aqua Illumination</h1>

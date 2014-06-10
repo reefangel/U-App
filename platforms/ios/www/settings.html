@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<!--
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+     KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+-->
+<html>
+    <head>
+        <meta charset="utf-8" />
+        <meta name="format-detection" content="telephone=no" />
+        <!-- WARNING: for iOS 7, remove the width=device-width and height=device-height attributes. See https://issues.apache.org/jira/browse/CB-4323 -->
+        <meta name="viewport" content="user-scalable=no, initial-scale=.5, maximum-scale=.5, minimum-scale=.5, target-densitydpi=device-dpi" />
+        <link rel="stylesheet" type="text/css" href="css/index.css" />
+        <meta name="msapplication-tap-highlight" content="no" />
+        <link rel="stylesheet" href="css/jquery.mobile-1.4.2.min.css" />
+        <script src="js/jquery-1.9.1.min.js"></script>
+        <script src="js/jquery.mobile-1.4.2.min.js"></script> 
+        <title>Reef Angel U-App</title>
+    </head>
+    <body>
+        <div id="panel-fixed-page1" class="jqm-demos" data-role="page" data-url="panel-fixed-page1" data-title="Reef Angel U-App">
+	        <div data-role="header" data-position="fixed" data-theme="b">
+                <div class="controllerselect">
+                <center>
+                    <select id="controller_selection" data-mini="true" data-theme="b">
+                    </select>
+                </center>
+                </div>
+                <a class="ui-nodisc-icon" href="#left-panel" data-icon="carat-r" data-iconpos="notext" data-shadow="false" data-iconshadow="false">Open left panel</a>
+                <a class="ui-nodisc-icon" href="#" data-icon="refresh"data-shadow="false" data-iconshadow="false" id="btn_refresh">Refresh</a>
+            </div><!-- /header -->
+            <div class="ui-content" role="main" id=maincontent>
+                <div class=pagesettings></div>
+
+                <div data-role="tabs">
+                    <div data-role="navbar" class=paramsnavbar>
+                        <ul id=settingstabs>
+                          <li class=mintab><a href="#controllertab" data-ajax="false" data-theme="a" class="ui-btn-active ui-state-persist">Controller</a></li>
+                          <li class=mintab><a href="#internalmemorytab" data-ajax="false" data-theme="a">Internal Memory</a></li>
+                        </ul>
+                    </div>
+                    <div id="controllertab">
+                        <div>
+	                        <button class=mainchoice id=add_controller>Add Controller</button>
+                            <ul data-role="listview" id="controller_list" data-inset="true">
+                            <li data-role="list-divider">Controllers</li>
+                            </ul>                	
+                        </div>
+                        <div class=hiddentab id=controller_form data-message="-1">
+                            <div><label for="txt_controller_port">Name:</label>
+        <input type="text" id="txt_controller_name" /></div>
+                            <div><label for="txt_controller_ip">IP address:</label>
+        <input type="text" id="txt_controller_ip" /></div>
+                            <div><label for="txt_controller_port">Port:</label>
+        <input type="text" id="txt_controller_port" /></div>
+                            <div><button id="save_settings">Save</button></div>
+                            <div><button id="cancel_settings">Cancel</button></div>
+                            <div id="popupMenu" data-role="popup" data-theme="b">
+                                    <ul style="min-width: 210px;" data-role="listview" data-inset="true">
+                                        <li data-role="list-divider">Choose an action</li>
+                                        <li><a href="#" id="editcontroller">Edit</a></li>
+                                        <li><a href="#" id="deletecontroller"data-transition="pop" data-position-to="window" data-rel="popup">Delete</a></li>
+                                    </ul>
+                            </div>      
+                            <div style="max-width: 400px;" id="confirmDelete" data-role="popup" data-theme="a" data-overlay-theme="b" data-dismissible="false">
+                                <div data-role="header" data-theme="b">
+                                <h1>Delete Controller?</h1>
+                                </div>
+                                <div class="ui-content" role="main">
+                                    <h3 class="ui-title">Are you sure you want to delete this controller?</h3>
+                                <p>This action cannot be undone.</p>
+                                    <a class="ui-btn ui-corner-all ui-shadow ui-btn-inline ui-btn-b" href="#" data-rel="back">Cancel</a>
+                                    <a class="ui-btn ui-corner-all ui-shadow ui-btn-inline ui-btn-b" href="#" data-transition="flow" data-rel="back" id="confirmdeletecontroller">Delete</a>
+                                </div>
+                            </div>                                                  
+                        </div>
+                    </div>
+                    <div id="internalmemorytab" class="ui-content">
+					<h1>Internal Memory</h1>
+                    </div>
+                </div>
+            </div><!-- /content -->
+            <div id="left-panel" data-role="panel">
+                <ul data-role="listview">
+                    <li data-icon="delete"><a href="#" data-rel="close">Close</a></li>
+                    <li data-role="collapsible" data-inset="false" data-iconpos="right">
+                      <h3>Modes</h3>
+                      <ul data-role="listview" data-inset="true">
+                        <li><a href="javascript:send_command('mf')" data-rel="close">Feeding</a></li>
+                        <li><a href="javascript:send_command('mw')" data-rel="close">Water Change</a></li>
+                        <li><a href="javascript:send_command('bp')" data-rel="close">Exit Mode</a></li>
+                        <li><a href="javascript:send_command('l1')" data-rel="close">Lights On</a></li>
+                        <li><a href="javascript:send_command('l0')" data-rel="close">Lights Cancel</a></li>
+                      </ul>
+                    </li><!-- /collapsible -->
+                    <li data-role="collapsible" data-inset="false" data-iconpos="right">
+                      <h3>Clear Status</h3>
+                      <ul data-role="listview" data-inset="true" id="ClearAlert">
+                        <li><a href="javascript:send_command('mt')" data-rel="close">Clear ATO</a></li>
+                        <li><a href="javascript:send_command('mo')" data-rel="close">Clear Overheat</a></li>
+                      </ul>
+                    </li><!-- /collapsible -->
+                    <li data-role="collapsible" data-inset="false" data-iconpos="right">
+                      <h3>Calibrate</h3>
+                      <ul data-role="listview" data-inset="true" id="CalibrateParams">
+                        <li><a href="javascript:send_command('cal0')" data-rel="close">pH</a></li>
+                      </ul>
+                    </li><!-- /collapsible -->
+                    <li><a href="#" data-rel="close" id="downloadlabels">Download Labels from Portal</a></li>
+                    <li><a href="#" data-rel="close">Sync RA Date/Time w/ Phone</a></li>
+                    <li><a href="javascript:send_command('v')" data-rel="close">Get RA Version</a></li>
+                    <li><a href="javascript:send_command('boot')" data-rel="close">Reboot Controller</a></li>
+                 </ul>
+            </div><!-- /panel -->	    
+		    <div data-role="footer" data-position="fixed" data-id="myfooter">
+                <footer>
+                    <li><a href="status.html" data-ajax="false" class=footerlink><img src="img/bar_status.png" border="0"></a>
+                    </li>
+                    <li><a href="relay.html" data-ajax="false" class=footerlink><img src="img/bar_relays.png" border="0"></a>
+                    </li>
+                    <li><a href="history.html" data-ajax="false" class=footerlink><img src="img/bar_history.png" border="0"></a>
+                    </li>
+                    <li><a href="settings.html" data-ajax="false" class=footerlink><img src="img/bar_settings.png" border="0"></a>
+                  </li>
+                </footer>
+		    </div><!-- /footer -->            
+        </div>    
+		<script type="text/javascript" src="cordova.js"></script>
+        <script type="text/javascript" src="js/index.js"></script>
+        <script>
+			for (a=0; a<localStorage.getItem("num_controllers"); a++)
+			{
+				$("#controller_list").append("<li data-icon='grid'><a href='#popupMenu' data-transition='fade' data-rel='popup' id='controller_list_" + a + "' class='controllerbutton'>" + localStorage.getItem("controller_name_"+a) + "</a></li>");
+			}
+			$("#controller_list").listview("refresh");
+		</script>
+    </body>
+</html>

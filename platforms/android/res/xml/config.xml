@@ -8,6 +8,9 @@
     <feature name="SplashScreen">
         <param name="android-package" value="org.apache.cordova.splashscreen.SplashScreen" />
     </feature>
+    <feature name="Device">
+        <param name="android-package" value="org.apache.cordova.device.Device" />
+    </feature>
     <name>Reef Angel U-App</name>
     <description>
         HTML5 based application designed to interact with your Reef Angel Controller. It's a universal app that can be compiled and deployed in several platforms.
@@ -19,4 +22,6 @@
     <access origin="*" />
     <preference name="SplashScreen" value="screen" />
     <preference name="SplashScreenDelay" value="2000" />
+    <preference name="StatusBarOverlaysWebView" value="false" />
+    <preference name="StatusBarBackgroundColor" value="#000000" />
 </widget>
