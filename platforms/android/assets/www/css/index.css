@@ -27,7 +27,6 @@ body {
     background-color:#FFFFFF !important;
     background-attachment:fixed;
     font-family:'HelveticaNeue-Light', 'HelveticaNeue', Helvetica, Arial, sans-serif;
-    font-size:12px;
     height:100%;
     margin:0px;
     padding:0px;
@@ -53,7 +52,7 @@ body {
 }
 
 h1 {
-    font-size:24px;
+    font-size:1.2em;
     font-weight:normal;
     margin:0px;
     overflow:visible;
@@ -133,56 +132,56 @@ h1 {
 }
 
 
-footer {
-	background-color: #007ef6;
+#headernav {
+	background:url(../img/header_bk_48.png);
     display: table;
-    height: 63px;
+    height: 50px;
     width: 100%;
 }
-footer li {
+#headernav li {
     display: table-cell;
-    height: 63px;
+    height: 50px;
     width: 25%;
     text-align: center;
 	white-space: nowrap;
 }
 
 .pagestatus {
-    background:url(../img/page_status.png) no-repeat center top;
+    background:url(../img/title_status_48.png) no-repeat center top;
 	margin:0px auto;
-	width: 200px;
-	height: 84px;
-	margin-bottom: 20px;
+	width: 320px;
+	height: 31px;
+	margin-bottom: 10px;
 }
 
 .pagerelay {
-    background:url(../img/page_relays.png) no-repeat center top;
+    background:url(../img/title_relay_48.png) no-repeat center top;
 	margin:0px auto;
-	width: 200px;
-	height: 84px;
-	margin-bottom: 20px;
+	width: 320px;
+	height: 31px;
+	margin-bottom: 10px;
 }
 
 .pagehistory {
-    background:url(../img/page_history.png) no-repeat center top;
+    background:url(../img/title_graph_48.png) no-repeat center top;
 	margin:0px auto;
-	width: 200px;
-	height: 84px;
-	margin-bottom: 20px;
+	width: 320px;
+	height: 31px;
+	margin-bottom: 10px;
 }
 
 .pagesettings {
-    background:url(../img/page_settings.png) no-repeat center top;
-	margin:0px auto;
-	width: 200px;
-	height: 84px;
-	margin-bottom: 20px;
+    background:url(../img/title_settings_48.png) no-repeat center top;
+	width: 320px;
+	height: 31px;
+	margin-bottom: 10px;
 }
 
 .paramstable {
     display: table;
     height: 63px;
     width: 100%;
+
 }
 
 .paramstable li {
@@ -287,7 +286,7 @@ h3 {
 	height:3px !important;
 }
 
-input.ui-slider-input {
+.mobile-slider-disabled {
     display:none !important;
 }
 
@@ -372,4 +371,154 @@ input.ui-slider-input {
 .watervalue {
 	padding-top: 20px;	
 	color: #007ef6;
+}
+
+.speedknob{
+	margin:0px auto;
+	width: 250px;
+	height: 175px;
+}
+
+.rflabel {
+	margin-top:10px;
+	margin-bottom:10px;
+    text-align:center;
+	font-size:1.3em;
+	font-weight:bold;
+}
+
+.rfvalue {
+	margin-top:10px;
+	margin-bottom:20px;
+    text-align:center;
+	font-size:1.5em;
+	font-weight:bold;
+	color: #007ef6;
+}
+
+.rfimage {
+	margin:0px auto;
+	width: 150px;
+}
+
+#flagslist {
+	margin-top:10px;
+    text-align:center;
+	font-size:1.5em;
+	font-weight:bold;
+}
+
+.flagitem {
+	margin-top:10px;
+}
+
+@media only screen and (min-device-width : 600px) and (min-device-height : 480px) { /* 7" tablets */
+
+.ui-navbar li .ui-btn{
+	font-size:1.1em !important;
+}
+body {
+	font-size:1.2em !important;
+}
+
+#headernav {
+	background:url(../img/header_bk_72.png);
+	height: 74px;
+}
+
+#headerstatus {
+	content:url(../img/monitor_star_72.png);
+	width:72px;
+	height:72px;
+}
+
+#headerrelay {
+	content:url(../img/hydroelectric_power_plant_72.png);
+	width:72px;
+	height:72px;
+}
+
+#headerhistory {
+	content:url(../img/stats_line_chart_72.png);
+	width:72px;
+	height:72px;
+}
+
+#headersettings {
+	content:url(../img/gear_zoom_72.png);
+	width:72px;
+	height:72px;
+}
+
+.pagestatus {
+    background:url(../img/title_status_72.png) no-repeat center top;
+	margin:0px auto;
+	width: 400px;
+	height: 100px;
+	margin-bottom: 20px;
+}
+
+.pagerelay {
+    background:url(../img/title_relay_72.png) no-repeat center top;
+	margin:0px auto;
+	width: 400px;
+	height: 100px;
+	margin-bottom: 20px;
+}
+
+.pagehistory {
+    background:url(../img/title_graph_72.png) no-repeat center top;
+	margin:0px auto;
+	width: 400px;
+	height: 100px;
+	margin-bottom: 20px;
+}
+
+.pagesettings {
+    background:url(../img/title_settings_72.png) no-repeat center top;
+	width: 400px;
+	height: 100px;
+	margin-bottom: 20px;
+}
+
+.relaybutton{
+	padding: 5px 19px 5px 19px !important;
+	font-size: 0.9em !important;
+}
+
+.relaylabel{
+	font-size:1.3em;
+	font-weight:bold;
+	padding-top: 23px;
+	height:50px !important;
+}
+
+.relaystatus{
+	float: left;
+	padding-top: 23px;
+	height:50px !important;
+	width: 35px !important;
+}
+
+.ui-btn{
+	font-size:1.1em !important;
+}
+
+.ui-controlgroup-label{
+	font-size:1.3em !important;
+}
+
+.ui-mini{
+	font-size:1.0em !important;
+}
+
+#controller_selection-button{
+	margin-top: 2px;
+	margin-bottom: 4px;
+}
+
+.ui-btn-icon-notext{
+	padding:10px !important;
+}
+
 }

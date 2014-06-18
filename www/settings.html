@@ -22,7 +22,7 @@
         <meta charset="utf-8" />
         <meta name="format-detection" content="telephone=no" />
         <!-- WARNING: for iOS 7, remove the width=device-width and height=device-height attributes. See https://issues.apache.org/jira/browse/CB-4323 -->
-        <meta name="viewport" content="user-scalable=no, initial-scale=.5, maximum-scale=.5, minimum-scale=.5, target-densitydpi=device-dpi" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
         <link rel="stylesheet" type="text/css" href="css/index.css" />
         <meta name="msapplication-tap-highlight" content="no" />
         <link rel="stylesheet" href="css/jquery.mobile-1.4.2.min.css" />
@@ -41,6 +41,16 @@
                 </div>
                 <a class="ui-nodisc-icon" href="#left-panel" data-icon="carat-r" data-iconpos="notext" data-shadow="false" data-iconshadow="false">Open left panel</a>
                 <a class="ui-nodisc-icon" href="#" data-icon="refresh"data-shadow="false" data-iconshadow="false" id="btn_refresh">Refresh</a>
+                <div id=headernav>
+                    <li><a href="status.html" data-ajax="false" class=footerlink><img src="img/monitor_star_48.png" border="0" id=headerstatus></a>
+                    </li>
+                    <li><a href="relay.html" data-ajax="false" class=footerlink><img src="img/hydroelectric_power_plant_48.png" border="0" id=headerrelay></a>
+                    </li>
+                    <li><a href="history.html" data-ajax="false" class=footerlink><img src="img/stats_line_chart_48.png" border="0" id=headerhistory></a>
+                    </li>
+                    <li><a href="settings.html" data-ajax="false" class=footerlink><img src="img/gear_zoom_48.png" border="0" id=headersettings></a>
+                    </li>
+                </div>
             </div><!-- /header -->
             <div class="ui-content" role="main" id=maincontent>
                 <div class=pagesettings></div>
@@ -120,23 +130,11 @@
                       </ul>
                     </li><!-- /collapsible -->
                     <li><a href="#" data-rel="close" id="downloadlabels">Download Labels from Portal</a></li>
-                    <li><a href="#" data-rel="close">Sync RA Date/Time w/ Phone</a></li>
+                    <li><a href="#" data-rel="close" id="synctime">Sync RA Date/Time w/ Phone</a></li>
                     <li><a href="javascript:send_command('v')" data-rel="close">Get RA Version</a></li>
                     <li><a href="javascript:send_command('boot')" data-rel="close">Reboot Controller</a></li>
                  </ul>
             </div><!-- /panel -->	    
-		    <div data-role="footer" data-position="fixed" data-id="myfooter">
-                <footer>
-                    <li><a href="status.html" data-ajax="false" class=footerlink><img src="img/bar_status.png" border="0"></a>
-                    </li>
-                    <li><a href="relay.html" data-ajax="false" class=footerlink><img src="img/bar_relays.png" border="0"></a>
-                    </li>
-                    <li><a href="history.html" data-ajax="false" class=footerlink><img src="img/bar_history.png" border="0"></a>
-                    </li>
-                    <li><a href="settings.html" data-ajax="false" class=footerlink><img src="img/bar_settings.png" border="0"></a>
-                  </li>
-                </footer>
-		    </div><!-- /footer -->            
         </div>    
 		<script type="text/javascript" src="cordova.js"></script>
         <script type="text/javascript" src="js/index.js"></script>

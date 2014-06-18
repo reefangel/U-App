@@ -23,6 +23,11 @@
 
 var chart;
 var seriesOptions;
+var rffields = ["rfw","rfrb","rfr","rfg","rfb","rfi"];
+var rfcolors = ["#FF9900","#0000DD","#DD0000","#006600","#0099FF","#990099"];
+var rfmodes = ["Constant","Lagoon","Reef Crest","Short Pulse","Long Pulse","Nutrient Transport","Tidal Swell","Feeding","Feeding","Night","Storm","Custom","Else"];
+var rfimages= ["constant.png","lagoon.png","reefcrest.png","shortpulse.png","longpulse.png","ntm.png","tsm.png","feeding.png","feeding.png","night.png","storm.png","custom.png","custom.png"];
+var rfmodecolors = ["#00682e","#ffee00","#ffee00","#16365e","#d99593","#eb70ff","#eb70ff","#000000","#000000","#000000","#000000","#000000","#000000"];
 
 var app = {
     // Application Constructor
@@ -69,9 +74,11 @@ $(document).ready(function(){
 		localStorage.setItem("controller_ip",localStorage.getItem("controller_ip_"+$(this).find('option:selected').val()));
 		localStorage.setItem("controller_port",localStorage.getItem("controller_port_"+$(this).find('option:selected').val()));
 		$('#btn_refresh').click();
+		$('#downloadlabels').click();
 	});
 
 	$("#pwmdinput").next().children("div").first().css("background-image","-webkit-gradient(linear,left top,left bottom,from(#FF9900),to(#EEEEEE))");
+	$("#pwmainput").next().children("div").first().css("background-image","-webkit-gradient(linear,left top,left bottom,from(#0000DD),to(#EEEEEE))");
 
 	$('#btn_refresh').on('vclick', function () {
 		if (localStorage.getItem("controller_ip")==null)
@@ -183,6 +190,29 @@ $(document).ready(function(){
 				}
 			}
 		});		
+	});
+	
+	$("#synctime").on('vclick', function () {
+		var now = new Date();
+		t="d";
+		a=now.getHours();
+		if (a<10) t+="0";
+		t+=a;
+		a=now.getMinutes();
+		if (a<10) t+="0";
+		t+=a;
+		t+=",";
+		a=now.getMonth()+1;
+		if (a<10) t+="0";
+		t+=a;
+		a=now.getDate();
+		if (a<10) t+="0";
+		t+=a;
+		t+=",";
+		a=now.getFullYear();
+		if (a>2000) a-=2000;
+		t+=a;
+		send_command(t);
 	});
 	
 	$("#save_settings").on('vclick', function () {
@@ -309,6 +339,15 @@ $(document).ready(function(){
 				$('#pwme'+a+'input').slider('refresh');
 			}
 		}
+		if (localStorage.getItem("rfw")!=null)
+		{
+			for (a=0;a<6;a++)
+			{
+				$('#'+rffields[a]+'input').val(localStorage.getItem(rffields[a]));
+				$('#'+rffields[a]+'input').next().children("div").first().css("background-image","-webkit-gradient(linear,left top,left bottom,from(" + rfcolors[a] + "),to(#EEEEEE))");
+				$('#'+rffields[a]+'input').slider('refresh');
+			}
+		}
 		refresh_slider();
 	});
 	
@@ -334,6 +373,57 @@ $(document).ready(function(){
 		$("#container").css("height",($(window).height()-20)+"px");
 		DrawChart();
 	});	
+	
+	$('.ui-slider').on('vclick', function (event) {
+		$("#popupDialog" ).popup("open");
+		$("#overrideslider").val($(this).children("input").first().val());
+		$("#overrideslider").next().children("div").first().css("background-image","-webkit-gradient(linear,left top,left bottom,from(" + $(this).children("input").first().attr("data-color") + "),to(#EEEEEE))");
+		$("#overrideslider").attr("data-message",$(this).children("input").first().attr("data-message"));
+		$("#overrideslider").slider('refresh');
+	});
+	
+	$("#setoverride").on('vclick', function () {
+		send_command("po" + $("#overrideslider").attr("data-message") + "," + $("#overrideslider").val());
+	});
+
+	$("#clearoverride").on('vclick', function () {
+		send_command("po" + $("#overrideslider").attr("data-message") + ",255");
+	});
+
+	$("#rfm, #rfmimage").on('vclick', function () {
+		$("#popupRFWaveMode").popup("open");
+	});
+	
+	$(".wavemodeitem").on('vclick', function () {
+		localStorage.setItem("needrefresh",1);
+		send_command($(this).attr("data-message"));
+		$("#popupRFWaveMode").popup("close");
+	});
+	
+	$("#dcm, #dcmimage").on('vclick', function () {
+		$("#popupDCWaveMode").popup("open");
+	});
+	
+	$(".wavemodeitem").on('vclick', function () {
+		localStorage.setItem("needrefresh",1);
+		send_command($(this).attr("data-message"));
+		$("#popupDCWaveMode").popup("close");
+	});
+	
+	$("#rfs, #rfd, #dcs, #dcd").on('vclick', function (event) {
+		$("#popupRFSpeed").popup("open");
+		$('#changeknob').trigger('configure',{"fgColor": $(this).attr('data-fgColor')}).css("color",$(this).attr('data-fgColor'));;
+		$('#changeknob').val($(this).val()).trigger('change');
+		$('#changeknob').attr("data-message",$(this).attr("data-message"));
+		$('#changeknobtitle').html($(this).attr("data-title"));
+		$('#changeknoblabel').html($(this).attr("data-title"));
+	});
+	
+	$("#setknob").on('vclick', function (event) {
+		send_command($('#changeknob').attr("data-message") + "," + $('#changeknob').val());
+	});
+	
+
 });
 
 function WriteStorage (x)
@@ -343,6 +433,8 @@ function WriteStorage (x)
 	localStorage.setItem("em",x.getElementsByTagName('EM').item(0).firstChild.data);
 	localStorage.setItem("em1",x.getElementsByTagName('EM1').item(0).firstChild.data);
 	localStorage.setItem("rem",x.getElementsByTagName('REM').item(0).firstChild.data);
+	localStorage.setItem("sf",x.getElementsByTagName('SF').item(0).firstChild.data);
+	localStorage.setItem("af",x.getElementsByTagName('AF').item(0).firstChild.data);
 	localStorage.setItem("t1",x.getElementsByTagName('T1').item(0).firstChild.data);
 	localStorage.setItem("t2",x.getElementsByTagName('T2').item(0).firstChild.data);
 	localStorage.setItem("t3",x.getElementsByTagName('T3').item(0).firstChild.data);
@@ -358,6 +450,7 @@ function WriteStorage (x)
 	if(x.getElementsByTagName('WL2').length>0) localStorage.setItem("wl2",x.getElementsByTagName('WL2').item(0).firstChild.data);
 	if(x.getElementsByTagName('WL3').length>0) localStorage.setItem("wl3",x.getElementsByTagName('WL3').item(0).firstChild.data);
 	if(x.getElementsByTagName('WL4').length>0) localStorage.setItem("wl4",x.getElementsByTagName('WL4').item(0).firstChild.data);
+	if(x.getElementsByTagName('IO').length>0) localStorage.setItem("io",x.getElementsByTagName('IO').item(0).firstChild.data);
 	if(x.getElementsByTagName('C0').length>0)
 	{
 		localStorage.setItem("c0",x.getElementsByTagName('C0').item(0).firstChild.data);
@@ -381,6 +474,21 @@ function WriteStorage (x)
 		{
 			localStorage.setItem("pwme"+a,x.getElementsByTagName('PWME'+a).item(0).firstChild.data);
 			localStorage.setItem("pwme"+a+"o",x.getElementsByTagName('PWME'+a+'O').item(0).firstChild.data);
+		}
+	}
+	if(x.getElementsByTagName('DCM').length>0) localStorage.setItem("dcm",x.getElementsByTagName('DCM').item(0).firstChild.data);
+	if(x.getElementsByTagName('DCS').length>0) localStorage.setItem("dcs",x.getElementsByTagName('DCS').item(0).firstChild.data);
+	if(x.getElementsByTagName('DCD').length>0) localStorage.setItem("dcd",x.getElementsByTagName('DCD').item(0).firstChild.data);
+	if(x.getElementsByTagName('RFM').length>0) localStorage.setItem("rfm",x.getElementsByTagName('RFM').item(0).firstChild.data);
+	if(x.getElementsByTagName('RFS').length>0) localStorage.setItem("rfs",x.getElementsByTagName('RFS').item(0).firstChild.data);
+	if(x.getElementsByTagName('RFD').length>0) localStorage.setItem("rfd",x.getElementsByTagName('RFD').item(0).firstChild.data);
+	
+	if(x.getElementsByTagName('RFW').length>0)
+	{
+		for (a=0;a<6;a++)
+		{
+			localStorage.setItem(rffields[a],x.getElementsByTagName(rffields[a].toUpperCase()).item(0).firstChild.data);
+			localStorage.setItem(rffields[a]+"o",x.getElementsByTagName(rffields[a].toUpperCase()+'O').item(0).firstChild.data);
 		}
 	}
 	localStorage.setItem("r",x.getElementsByTagName('R').item(0).firstChild.data);
@@ -437,6 +545,29 @@ function ReadStorage(p)
 	$('#wl2level').css("height",parseInt(localStorage.getItem("wl2"))+10);
 	$('#wl3level').css("height",parseInt(localStorage.getItem("wl3"))+10);
 	$('#wl4level').css("height",parseInt(localStorage.getItem("wl4"))+10);
+	$('#rfm').html(rfmodes[localStorage.getItem("rfm")]);	
+	$('#rfm').css("color",rfmodecolors[localStorage.getItem("rfm")]);
+	$('#rfmimage').html("<img src=img/" + rfimages[localStorage.getItem("rfm")] + ">");	
+//	$('#rfs').val(localStorage.getItem("rfs"));	
+	$('#rfs, #rfd').attr("data-fgColor",rfmodecolors[localStorage.getItem("rfm")]);
+//	$('#rfd').val(localStorage.getItem("rfd"));	
+//	$('#rfd').attr("data-fgColor",rfmodecolors[localStorage.getItem("rfm")]);
+	$('#dcm').html(rfmodes[localStorage.getItem("dcm")]);	
+	$('#dcm').css("color",rfmodecolors[localStorage.getItem("dcm")]);
+	$('#dcmimage').html("<img src=img/" + rfimages[localStorage.getItem("dcm")] + ">");	
+//	$('#dcs').val(localStorage.getItem("dcs"));	
+	$('#dcs, #dcd').attr("data-fgColor",rfmodecolors[localStorage.getItem("dcm")]);
+//	$('#dcd').val(localStorage.getItem("dcd"));	
+//	$('#dcd').attr("data-fgColor",rfmodecolors[localStorage.getItem("dcm")]);
+
+	$('#rfs, #rfd').trigger('configure',{"fgColor": rfmodecolors[localStorage.getItem("rfm")]}).css("color",rfmodecolors[localStorage.getItem("rfm")]);;
+	$('#rfs').val(localStorage.getItem("rfs")).trigger('change');
+	$('#rfd').val(localStorage.getItem("rfd")).trigger('change');
+
+	$('#dcs, #dcd').trigger('configure',{"fgColor": rfmodecolors[localStorage.getItem("dcm")]}).css("color",rfmodecolors[localStorage.getItem("dcm")]);;
+	$('#dcs').val(localStorage.getItem("dcs")).trigger('change');
+	$('#dcd').val(localStorage.getItem("dcd")).trigger('change');
+	
 	if (localStorage.getItem("atolow")==1)
 		$('#atolow').html("<svg height='20' width='20'><circle cx='10' cy='10' r='10' fill='green' /></svg>");
 	else
@@ -449,6 +580,13 @@ function ReadStorage(p)
 		$('#leak').html("<svg height='20' width='20'><circle cx='10' cy='10' r='10' fill='green' /></svg>");
 	else
 		$('#leak').html("<svg height='20' width='20'><circle cx='10' cy='10' r='10' fill='red' /></svg>");
+	for (a=0;a<6;a++)
+	{
+		if ((localStorage.getItem("io")&(1<<a)) != 0)
+			$('#io'+a).html("<svg height='20' width='20'><circle cx='10' cy='10' r='10' fill='red' /></svg>");		
+		else
+			$('#io'+a).html("<svg height='20' width='20'><circle cx='10' cy='10' r='10' fill='green' /></svg>");
+	}
 	rs=localStorage.getItem("r");
 	rs|=localStorage.getItem("ron");
 	rs&=localStorage.getItem("roff");
@@ -491,7 +629,15 @@ function ReadStorage(p)
 		}
 	}
 	$("[data-role=controlgroup]").controlgroup();
-	
+	$("#flagslist").html("");
+	if (localStorage.getItem("af")==0 && localStorage.getItem("sf")==0) $("#flagslist").append("No Alerts");
+	if ((localStorage.getItem("af") & 1)!=0) $("#flagslist").append("<div class=flagitem>ATO Timeout<br><img src='img/timeout.png'></div>");
+	if ((localStorage.getItem("af") & 2)!=0) $("#flagslist").append("<div class=flagitem>Overheat<br><img src='img/overheat.png'></div>");
+	if ((localStorage.getItem("af") & 4)!=0) $("#flagslist").append("<div class=flagitem>Bus Lock<br><img src='img/buslock.png'></div>");
+	if ((localStorage.getItem("af") & 8)!=0) $("#flagslist").append("<div class=flagitem>Leak Detected<br><img src='img/leak.png'></div>");
+	if ((localStorage.getItem("sf") & 1)!=0) $("#flagslist").append("<div class=flagitem>Lights On Mode<br><img src='img/lightson.png'></div>");
+	if ((localStorage.getItem("sf") & 2)!=0) $("#flagslist").append("<div class=flagitem>Feeding Mode<br><img src='img/feedingmode.png'></div>");
+	if ((localStorage.getItem("sf") & 4)!=0) $("#flagslist").append("<div class=flagitem>Water Change Mode<br><img src='img/waterchangemode.png'></div>");
 	lastEM=localStorage.getItem("em");
 	lastEM1=localStorage.getItem("em1");
 
@@ -504,14 +650,19 @@ function ReadStorage(p)
 		$('#pwme'+a).html(localStorage.getItem("pwme"+a)/1+"%");
 		$('#pwme'+a+'input').val(localStorage.getItem("pwme"+a));
 	}
+	for (a=0;a<6;a++)
+	{
+		$('#'+rffields[a]).html(localStorage.getItem(rffields[a])/1+"%");
+		$('#'+rffields[a]+'input').val(localStorage.getItem(rffields[a]));
+	}
 	
 	refresh_slider();
 }
 
 function UpdateLabels()
 {
-	var labels = ["t1n","t2n","t3n","phn","saln ","orpn","phen","humn","parn","c0n","c1n","c2n","c3n","c4n","c5n","c6n","c7n","atolown","atohighn","pwma1n","pwmd1n","leakn","r1n","r2n","r3n","r4n","r5n","r6n","r7n","r8n","r11n","r12n","r13n","r14n","r15n","r16n","r17n","r18n","r21n","r22n","r23n","r24n","r25n","r26n","r27n","r28n","r31n","r32n","r33n","r34n","r35n","r36n","r37n","r38n","r41n","r42n","r43n","r44n","r45n","r46n","r47n","r48n","r51n","r52n","r53n","r54n","r55n","r56n","r57n","r58n","r61n","r62n","r63n","r64n","r65n","r66n","r67n","r68n","r71n","r72n","r73n","r74n","r75n","r76n","r77n","r78n","r81n","r82n","r83n","r84n","r85n","r86n","r87n","r88n","pwme0n","pwme1n","pwme2n","pwme3n","pwme4n","pwme5n","wln","wl1n","wl2n","wl3n","wl4n"];
-	var defaultlabels = ["Temp 1","Temp 2","Temp 3","pH","Salinity","ORP","pH Expansion","Humidity","PAR","Custom Var 0","Custom Var 1","Custom Var 2","Custom Var 3","Custom Var 4","Custom Var 5","Custom Var 6","Custom Var 7","ATO Low","ATO High","Actinic","Daylight","Leak Detector","Port 1","Port 2","Port 3","Port 4","Port 5","Port 6","Port 7","Port 8","Port 11","Port 12","Port 13","Port 14","Port 15","Port 16","Port 17","Port 18","Port 21","Port 22","Port 23","Port 24","Port 25","Port 26","Port 27","Port 28","Port 31","Port 32","Port 33","Port 34","Port 35","Port 36","Port 37","Port 38","Port 41","Port 42","Port 43","Port 44","Port 45","Port 46","Port 47","Port 48","Port 51","Port 52","Port 53","Port 54","Port 55","Port 56","Port 57","Port 58","Port 61","Port 62","Port 63","Port 64","Port 65","Port 66","Port 67","Port 68","Port 71","Port 72","Port 73","Port 74","Port 75","Port 76","Port 77","Port 78","Port 81","Port 82","Port 83","Port 84","Port 85","Port 86","Port 87","Port 88","Channel 0","Channel 1","Channel 2","Channel 3","Channel 4","Channel 5","Channel 0","Channel 1","Channel 2","Channel 3","Channel 4"];
+	var labels = ["t1n","t2n","t3n","phn","saln ","orpn","phen","humn","parn","c0n","c1n","c2n","c3n","c4n","c5n","c6n","c7n","atolown","atohighn","pwma1n","pwmd1n","leakn","r1n","r2n","r3n","r4n","r5n","r6n","r7n","r8n","r11n","r12n","r13n","r14n","r15n","r16n","r17n","r18n","r21n","r22n","r23n","r24n","r25n","r26n","r27n","r28n","r31n","r32n","r33n","r34n","r35n","r36n","r37n","r38n","r41n","r42n","r43n","r44n","r45n","r46n","r47n","r48n","r51n","r52n","r53n","r54n","r55n","r56n","r57n","r58n","r61n","r62n","r63n","r64n","r65n","r66n","r67n","r68n","r71n","r72n","r73n","r74n","r75n","r76n","r77n","r78n","r81n","r82n","r83n","r84n","r85n","r86n","r87n","r88n","pwme0n","pwme1n","pwme2n","pwme3n","pwme4n","pwme5n","wln","wl1n","wl2n","wl3n","wl4n","rfwn","rfrbn","rfrn","rfgn","rfbn","rfin","io0n","io1n","io2n","io3n","io4n","io5n"];
+	var defaultlabels = ["Temp 1","Temp 2","Temp 3","pH","Salinity","ORP","pH Expansion","Humidity","PAR","Custom Var 0","Custom Var 1","Custom Var 2","Custom Var 3","Custom Var 4","Custom Var 5","Custom Var 6","Custom Var 7","ATO Low","ATO High","Actinic","Daylight","Leak Detector","Port 1","Port 2","Port 3","Port 4","Port 5","Port 6","Port 7","Port 8","Port 11","Port 12","Port 13","Port 14","Port 15","Port 16","Port 17","Port 18","Port 21","Port 22","Port 23","Port 24","Port 25","Port 26","Port 27","Port 28","Port 31","Port 32","Port 33","Port 34","Port 35","Port 36","Port 37","Port 38","Port 41","Port 42","Port 43","Port 44","Port 45","Port 46","Port 47","Port 48","Port 51","Port 52","Port 53","Port 54","Port 55","Port 56","Port 57","Port 58","Port 61","Port 62","Port 63","Port 64","Port 65","Port 66","Port 67","Port 68","Port 71","Port 72","Port 73","Port 74","Port 75","Port 76","Port 77","Port 78","Port 81","Port 82","Port 83","Port 84","Port 85","Port 86","Port 87","Port 88","Channel 0","Channel 1","Channel 2","Channel 3","Channel 4","Channel 5","Channel 0","Channel 1","Channel 2","Channel 3","Channel 4","White","Royal Blue","Red","Green","Blue","Intensity","I/O Channel 0","I/O Channel 1","I/O Channel 2","I/O Channel 3","I/O Channel 4","I/O Channel 5"];
 	
 	for (a=0;a<labels.length;a++)
 	{
@@ -531,7 +682,7 @@ function CheckExpansion()
 		{
 			$("#dimmingtab").append("<label for='pwme"+a+"input' id='pwme"+a+"n' class='dimminglabel'></label>");
 			$("#dimmingtab").append("<div class='dimmingvalue' id='pwme"+a+"'>0%</div>");
-			$("#dimmingtab").append("<input id='pwme"+a+"input' name='pwme"+a+"input' value='0' type='range' max='100' min='0' data-highlight='true' disabled='disabled' data-mini='true'>");
+			$("#dimmingtab").append("<input id='pwme"+a+"input' name='pwme"+a+"input' value='0' type='range' max='100' min='0' data-highlight='true' disabled='disabled' data-mini='true' data-message='" + (a+2) + "' data-color='#006600'>");
 		}
 	}
 	if ((EM & 1<<1) != 0)
@@ -539,6 +690,13 @@ function CheckExpansion()
 		$("#expmodtabs").append("<li class=mintab><a href='#rftab' data-ajax='false' data-theme='a'>RF</a></li>");
 		$("#rftab").removeClass("hiddentab");
 		$("#rftab").addClass("ui-content");
+		for (a=0;a<6;a++)
+		{
+			$("#rftab").append("<label for='"+rffields[a]+"input' id='"+rffields[a]+"n' class='dimminglabel'></label>");
+			$("#rftab").append("<div class='dimmingvalue' id='"+rffields[a]+"'>0%</div>");
+			$("#rftab").append("<input id='"+rffields[a]+"input' name='"+rffields[a]+"input' value='0' type='range' max='100' min='0' data-highlight='true' disabled='disabled' data-mini='true' data-message='" + (a+11) + "' data-color='" + rfcolors[a] + "'>");
+		}
+		
 	}	
 	if ((EM & 1<<2) != 0)
 	{
@@ -550,16 +708,25 @@ function CheckExpansion()
 	{
 		$("#paramslist").append("<div><div class=paramslabel id=saln>Salinity</div><div class=paramsvalue id=sal></div></div>");
 		$("#CalibrateParams").append("<li><a href='javascript:send_command(\"cal1\")' data-rel='close'>Salinity</a></li>");
+		$("#graph_selection").append("<input id='historysal' type='checkbox'><label for='historysal' id='saln'></label>");
+
 	}
 	if ((EM & 1<<4) != 0)
 	{
 		$("#paramslist").append("<div><div class=paramslabel id=orpn>ORP</div><div class=paramsvalue id=orp></div></div>");
 		$("#CalibrateParams").append("<li><a href='javascript:send_command(\"cal2\")' data-rel='close'>ORP</a></li>");
+		$("#graph_selection").append("<input id='historyorp' type='checkbox'><label for='historyorp' id='orpn'></label>");
+	}
+	if ((EM & 1<<5) != 0)
+	{
+		for (a=0;a<6;a++)
+			$("#iolist").append("<div><div class=paramslabel id=io" + a + "n></div><div class=paramsvalue id=io" + a + "></div></div>");
 	}
 	if ((EM & 1<<6) != 0)
 	{
 		$("#paramslist").append("<div><div class=paramslabel id=phen>pH Expansion</div><div class=paramsvalue id=phe></div></div>");
 		$("#CalibrateParams").append("<li><a href='javascript:send_command(\"cal3\")' data-rel='close'>pH Expansion</a></li>");
+		$("#graph_selection").append("<input id='historyphe' type='checkbox'><label for='historyphe' id='phen'></label>");
 	}
 	if ((EM & 1<<7) != 0)
 	{
@@ -572,7 +739,14 @@ function CheckExpansion()
 	if ((EM1 & 1<<0) != 0)
 	{
 		$("#paramslist").append("<div><div class=paramslabel id=humn>Humidity</div><div class=paramsvalue id=hum></div></div>");
+		$("#graph_selection").append("<input id='historyhum' type='checkbox'><label for='historyhum' id='humn'></label>");
 	}
+	if ((EM1 & 1<<1) != 0)
+	{
+		$("#expmodtabs").append("<li class=mintab><a href='#dcpumptab' data-ajax='false' data-theme='a'>DC Pump</a></li>");
+		$("#dcpumptab").removeClass("hiddentab");
+		$("#dcpumptab").addClass("ui-content");
+	}	
 	if ((EM1 & 1<<2) != 0)
 	{
 		$("#ClearAlert").append("<li><a href='javascript:send_command(\"ml\")' data-rel='close'>Clear Leak</a></li>");
@@ -596,7 +770,7 @@ function CheckExpansion()
 			{
 				$("#relaytabs").append("<li class=mintab><a href='#expbox" + a + "' data-ajax='false' data-theme='a'>Exp Box" + a + "</a></li>");
 				$("#expbox" + a + "").removeClass("hiddentab");
-				$("#expbox" + a + "").addClass("ui-content");
+				//$("#expbox" + a + "").addClass("ui-content");
 			}
 		}
 	}
@@ -624,11 +798,15 @@ function send_command(command)
 		url: controller_command(command),
 		timeout: 10000,
 		success: function(data) {
-			$.mobile.loading( "hide" );
 			x=data.documentElement;  
 			if(x.childNodes.length==1)
 				if (x.firstChild.data!="OK")
 					alert(x.firstChild.data);
+				else
+					setTimeout(function() {
+						$.mobile.loading( "hide" );
+						$('#btn_refresh').click();
+					}, 1000);
 			if(x.childNodes.length>1)
 				if(x.nodeName=="RA")
 				{
@@ -715,6 +893,30 @@ function refresh_slider()
 			}
 		}
 	}
+	for (a=0;a<6;a++)
+	{
+		if(localStorage.getItem(rffields[a]+"o")!=null)
+		{
+			if (localStorage.getItem(rffields[a]+"o")<100)
+			{
+				$('#'+rffields[a]+'n').html(localStorage.getItem(rffields[a]+"n")+" - Overriden");
+				if ($('#'+rffields[a]+'input').hasClass("ui-mini"))
+				{
+					$('#'+rffields[a]+'input').next().children("a").first().css("background","red");
+					$('#'+rffields[a]+'input').slider('refresh');
+				}
+			}
+			else
+			{
+				$('#'+rffields[a]+'n').html(localStorage.getItem(rffields[a]+"n"));
+				if ($('#'+rffields[a]+'input').hasClass("ui-mini"))
+				{
+					$('#'+rffields[a]+'input').next().children("a").first().css("background","#f6f6f6");
+					$('#'+rffields[a]+'input').slider('refresh');
+				}
+			}
+		}
+	}	
 }
 
 function CreateChart()
@@ -724,6 +926,10 @@ function CreateChart()
 	if ($("#historyt2").prop("checked")==true) names.push("T2");
 	if ($("#historyt3").prop("checked")==true) names.push("T3");
 	if ($("#historyph").prop("checked")==true) names.push("PH");
+	if ($("#historysal").prop("checked")==true) names.push("SAL");
+	if ($("#historyorp").prop("checked")==true) names.push("ORP");
+	if ($("#historyphe").prop("checked")==true) names.push("PHE");
+	if ($("#historyhum").prop("checked")==true) names.push("HUM");
 	if (names.length==0)
 	{
 		alert("At least on parameter needs to be checked.");
@@ -736,7 +942,7 @@ function CreateChart()
 		html: ""
 	});
 	$("#container").html("");
-	$("#container").css("height",($(window).height()-20)+"px");
+	$("#container").css("height",($(window).height()-80)+"px");
 	$("#container").css("margin-top","-100px");
 	Highcharts.setOptions({
 		global: {
