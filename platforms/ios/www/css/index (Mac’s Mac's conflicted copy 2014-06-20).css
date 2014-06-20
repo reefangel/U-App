@@ -1,0 +1,588 @@
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
+* {
+    -webkit-tap-highlight-color: rgba(0,0,0,0); /* make transparent link selection, adjust last value opacity 0 to 1.0 */
+}
+
+body {
+    -webkit-touch-callout: none;                /* prevent callout to copy image, etc when tap to hold */
+    -webkit-text-size-adjust: none;             /* prevent webkit from resizing text to fit */
+    -webkit-user-select: none;                  /* prevent copy paste, to allow, change 'none' to 'text' */
+    background-color:#FFFFFF !important;
+    background-attachment:fixed;
+    font-family:'HelveticaNeue-Light', 'HelveticaNeue', Helvetica, Arial, sans-serif;
+    height:100%;
+    margin:0px;
+    padding:0px;
+    width:100%;
+}
+
+/* Portrait layout (default) */
+.app {
+    background:url(../img/Logo.png) no-repeat center top; /* 170px x 200px */
+    text-align:center;
+    height:100%;
+    width:100%;
+}
+
+/* Landscape layout (with min-width) */
+@media screen and (min-aspect-ratio: 1/1) and (min-width:400px) {
+    .app {
+        background-position:left center;
+        padding:75px 0px 75px 170px;  /* padding-top + padding-bottom + text area = image height */
+        margin:-90px 0px 0px -198px;  /* offset vertical: half of image height */
+                                      /* offset horizontal: half of image width and text area width */
+    }
+}
+
+h1 {
+    font-size:1.2em;
+    font-weight:normal;
+    margin:0px;
+    overflow:visible;
+    padding:0px;
+    text-align:center;
+}
+
+.event {
+    border-radius:4px;
+    -webkit-border-radius:4px;
+    color:#FFFFFF;
+    font-size:12px;
+    margin:0px 30px;
+    padding:2px 0px;
+}
+
+.event.listening {
+    background-color:#333333;
+    display:block;
+}
+
+.event.received {
+    background-color:#4B946A;
+    display:none;
+}
+
+@keyframes fade {
+    from { opacity: 1.0; }
+    50% { opacity: 0.4; }
+    to { opacity: 1.0; }
+}
+ 
+@-webkit-keyframes fade {
+    from { opacity: 1.0; }
+    50% { opacity: 0.4; }
+    to { opacity: 1.0; }
+}
+ 
+.blink {
+    animation:fade 3000ms infinite;
+    -webkit-animation:fade 3000ms infinite;
+}
+
+.topbar{
+	padding-top:30px;
+	padding-bottom:30px;
+}
+
+.lastupdate
+{
+	padding-top:10px;
+	text-align:center;
+	float:left;
+	width: 80%;
+}
+
+.logo {
+    background:url(../img/logo.png) no-repeat center top; /* 170px x 200px */
+	margin:0px auto;
+    height:107px;
+    width:280px;
+	margin-top:20px;
+}
+
+.logotext {
+    text-align:center;
+	font-weight:bold;
+	font-size: 1.2em;
+	color:#666;
+	margin-bottom:30px;
+}
+	
+.mainchoice {
+	margin-top:10px;
+	margin-bottom:10px;
+    text-align:center;
+}
+
+
+#headernav {
+	background:url(../img/header_bk_48.png);
+    display: table;
+    height: 50px;
+    width: 100%;
+}
+#headernav li {
+    display: table-cell;
+    height: 50px;
+    width: 25%;
+    text-align: center;
+	white-space: nowrap;
+}
+
+.pagestatus {
+    background:url(../img/title_status_48.png) no-repeat center top;
+	margin:0px auto;
+	width: 320px;
+	height: 31px;
+	margin-bottom: 10px;
+}
+
+.pagerelay {
+    background:url(../img/title_relay_48.png) no-repeat center top;
+	margin:0px auto;
+	width: 320px;
+	height: 31px;
+	margin-bottom: 10px;
+}
+
+.pagehistory {
+    background:url(../img/title_graph_48.png) no-repeat center top;
+	margin:0px auto;
+	width: 320px;
+	height: 31px;
+	margin-bottom: 10px;
+}
+
+.pagesettings {
+    background:url(../img/title_settings_48.png) no-repeat center top;
+	margin:0px auto;
+	width: 320px;
+	height: 31px;
+	margin-bottom: 10px;
+}
+
+.paramstable {
+    display: table;
+    height: 63px;
+    width: 100%;
+
+}
+
+.paramstable li {
+    display: table-cell;
+    height: 63px;
+    width: 100%;
+    text-align: center;
+	white-space: nowrap;
+}
+
+.paramslabel{
+	font-size:1.3em;
+	font-weight:bold;
+	float: left;
+	width:50%;
+	text-align:right;
+	padding-right: 20px;
+	padding-top: 2px;
+}
+
+.paramsvalue{
+	font-size:1.5em;
+	font-weight:bold;
+	color: #007ef6;
+}
+
+.relaylabel{
+	font-size:1.1em;
+	font-weight:bold;
+	padding-top: 18px;
+	height:30px !important;
+}
+
+.relayvalue{
+	padding-right: 10px;
+	font-size:1.5em;
+	font-weight:bold;
+	color: #007ef6;
+	float: left;
+	min-width:150px !important;
+	height:30px !important;
+}
+
+.relaystatus{
+	float: left;
+	padding-top: 18px;
+	height:30px !important;
+	width: 35px !important;
+}
+
+.refreshbutton{
+	cursor:pointer;
+	padding:3px !important;	
+	margin-top:3px !important;
+	margin-right:3px !important;
+}
+
+.refreshicon{
+	cursor:pointer;
+	padding:3px !important;	
+}
+
+.ui-content, .ui-mobile, .ui-page-theme-a, .ui-panel-wrapper {
+    background-color:#FFFFFF !important;
+}
+
+.ui-li-static{
+	padding:0 !important;
+}
+
+h3 {
+	margin:0 !important;
+}
+
+.mintab{
+	min-width:33%;
+}
+
+.hiddentab{
+	display:none;
+}
+
+.relaybutton{
+	padding: 3px 12px 3px 12px !important;
+	font-size: .6em !important;
+}
+
+.controllerselect{
+	margin:0px !important;
+	padding:0px !important;
+}
+
+.ui-select{
+	margin:3px !important;
+}
+
+.ui-slider-handle{
+	border-radius: 50% !important;
+}
+
+.ui-slider-track{
+	height:3px !important;
+}
+
+.mobile-slider-disabled {
+    display:none !important;
+}
+
+.ui-state-disabled {
+	opacity:1 !important;
+}
+
+.dimminglabel{
+	font-size:1.3em !important;
+	font-weight:bold !important;
+}
+
+.dimmingvalue {
+	float:left;
+	text-align: center;
+	font-size:1.2em;
+	font-weight:bold;
+	color: #007ef6;
+}
+
+.container {
+	margin:0px auto;
+	background:rgba(0,0,0,0.10);
+	width:50px;
+	border-left:1px solid #bbb;
+	border-right:1px solid #bbb;
+	border-bottom:1px solid #bbb;
+	border-top:1px solid #ccc;
+	-webkit-border-radius:10px;
+	-moz-border-radius:10px;
+	border-radius:10px;
+	padding-left:2px;
+	padding-right:3px;
+	padding-bottom:7px;
+	padding-top:1px;
+}
+.glass {
+	background:rgba(255,255,255,0.50);
+	border:1px solid #bbb;
+	border-top:1px solid #eee;
+	-webkit-border-radius:10px;
+	-moz-border-radius:10px;
+	border-radius:10px;
+	width:50px;
+	height:120px;
+	position:relative;
+}
+.waterlevel {
+	background-color:#9cc6ff;
+	position:absolute;
+	bottom:0px;
+	width:50px;
+	height:0px;
+	-webkit-transition:all 3s ease-out;
+	-moz-transition:all 3s ease-out;
+	-o-transition:all 3s ease-out;
+	transition:all 3s ease-out;
+	-webkit-border-bottom-right-radius:10px;
+	-webkit-border-bottom-left-radius:10px;
+	-moz-border-radius-bottomright:10px;
+	-moz-border-radius-bottomleft:10px;
+	border-bottom-right-radius:10px;
+	border-bottom-left-radius:10px;
+}
+
+.col-group {
+	overflow: hidden;
+	margin-bottom: 10px;
+}
+.col-group > div {
+	float: left;
+	width: 50%;
+}
+
+.waterdiv {
+	font-size:1.3em;
+	font-weight:bold;
+	text-align:center;
+	padding-top: 30px;	
+}
+
+.watervalue {
+	padding-top: 20px;	
+	color: #007ef6;
+}
+
+.speedknob{
+	margin:0px auto;
+	width: 250px;
+	height: 175px;
+}
+
+.rflabel {
+	margin-top:10px;
+	margin-bottom:10px;
+    text-align:center;
+	font-size:1.3em;
+	font-weight:bold;
+}
+
+.rfvalue {
+	margin-top:10px;
+	margin-bottom:20px;
+    text-align:center;
+	font-size:1.5em;
+	font-weight:bold;
+	color: #007ef6;
+}
+
+.rfimage {
+	margin:0px auto;
+	width: 150px;
+}
+
+#flagslist {
+	margin-top:10px;
+    text-align:center;
+	font-size:1.5em;
+	font-weight:bold;
+}
+
+.flagitem {
+	margin-top:10px;
+}
+
+@media only screen and (min-device-width : 600px) and (min-device-height : 480px) { /* 7" tablets */
+
+.ui-navbar li .ui-btn{
+	font-size:1.1em !important;
+}
+body {
+	font-size:1.2em !important;
+}
+
+#headernav {
+	background:url(../img/header_bk_72.png);
+	height: 74px;
+}
+
+#headerstatus {
+	content:url(../img/monitor_star_72.png);
+	width:72px;
+	height:72px;
+}
+
+#headerrelay {
+	content:url(../img/hydroelectric_power_plant_72.png);
+	width:72px;
+	height:72px;
+}
+
+#headerhistory {
+	content:url(../img/stats_line_chart_72.png);
+	width:72px;
+	height:72px;
+}
+
+#headersettings {
+	content:url(../img/gear_zoom_72.png);
+	width:72px;
+	height:72px;
+}
+
+.pagestatus {
+    background:url(../img/title_status_72.png) no-repeat center top;
+	margin:0px auto;
+	width: 400px;
+	height: 100px;
+	margin-bottom: 20px;
+}
+
+.pagerelay {
+    background:url(../img/title_relay_72.png) no-repeat center top;
+	margin:0px auto;
+	width: 400px;
+	height: 100px;
+	margin-bottom: 20px;
+}
+
+.pagehistory {
+    background:url(../img/title_graph_72.png) no-repeat center top;
+	margin:0px auto;
+	width: 400px;
+	height: 100px;
+	margin-bottom: 20px;
+}
+
+.pagesettings {
+    background:url(../img/title_settings_72.png) no-repeat center top;
+	margin:0px auto;
+	width: 400px;
+	height: 100px;
+	margin-bottom: 20px;
+}
+
+.relaybutton{
+	padding: 5px 19px 5px 19px !important;
+	font-size: 0.9em !important;
+}
+
+.relaylabel{
+	font-size:1.3em;
+	font-weight:bold;
+	padding-top: 23px;
+	height:50px !important;
+}
+
+.relaystatus{
+	float: left;
+	padding-top: 23px;
+	height:50px !important;
+	width: 35px !important;
+}
+
+.ui-btn{
+	font-size:1.1em !important;
+}
+
+.ui-controlgroup-label{
+	font-size:1.3em !important;
+}
+
+.ui-mini{
+	font-size:1.0em !important;
+}
+
+#controller_selection-button{
+	margin-top: 2px;
+	margin-bottom: 4px;
+}
+
+.ui-btn-icon-notext{
+	padding:10px !important;
+}
+
+}
+
+@media only screen and (max-device-width : 350px)) { /* iphone */
+
+.ui-navbar li .ui-btn{
+	font-size:.9em !important;
+}
+body {
+	font-size:.7em !important;
+}
+
+.pagestatus {
+    background:url(../img/title_status_24.png) no-repeat center top;
+	margin:0px auto;
+	width: 260px;
+	height: 25px;
+	margin-bottom: 20px;
+}
+
+.pagerelay {
+    background:url(../img/title_relay_24.png) no-repeat center top;
+	margin:0px auto;
+	width: 260px;
+	height: 25px;
+	margin-bottom: 20px;
+}
+
+.pagehistory {
+    background:url(../img/title_graph_24.png) no-repeat center top;
+	margin:0px auto;
+	width: 260px;
+	height: 25px;
+	margin-bottom: 20px;
+}
+
+.pagesettings {
+    background:url(../img/title_settings_24.png) no-repeat center top;
+	margin:0px auto;
+	width: 260px;
+	height: 25px;
+	margin-bottom: 20px;
+}
+
+.relaybutton{
+	padding: 5px 19px 5px 19px !important;
+	font-size: 0.9em !important;
+}
+
+.relaylabel{
+	font-size:1em;
+	font-weight:bold;
+	padding-top: 23px;
+	height:50px !important;
+}
+
+.relaystatus{
+	float: left;
+	padding-top: 20px;
+	height:50px !important;
+	width: 35px !important;
+}
+
+}

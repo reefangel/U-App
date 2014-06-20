@@ -22,7 +22,7 @@
         <meta charset="utf-8" />
         <meta name="format-detection" content="telephone=no" />
         <!-- WARNING: for iOS 7, remove the width=device-width and height=device-height attributes. See https://issues.apache.org/jira/browse/CB-4323 -->
-        <meta name="viewport" content="user-scalable=no, initial-scale=.5, maximum-scale=.5, minimum-scale=.5, target-densitydpi=device-dpi" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
         <link rel="stylesheet" type="text/css" href="css/index.css" />
         <meta name="msapplication-tap-highlight" content="no" />
         <link rel="stylesheet" href="css/jquery.mobile-1.4.2.min.css" />
@@ -41,6 +41,16 @@
                 </div>
                 <a class="ui-nodisc-icon" href="#left-panel" data-icon="carat-r" data-iconpos="notext" data-shadow="false" data-iconshadow="false">Open left panel</a>
                 <a class="ui-nodisc-icon" href="#" data-icon="refresh"data-shadow="false" data-iconshadow="false" id="btn_refresh">Refresh</a>
+                <div id=headernav>
+                    <li><a href="status.html" data-ajax="false" class=footerlink><img src="img/monitor_star_48.png" border="0" id=headerstatus></a>
+                    </li>
+                    <li><a href="relay.html" data-ajax="false" class=footerlink><img src="img/hydroelectric_power_plant_48.png" border="0" id=headerrelay></a>
+                    </li>
+                    <li><a href="history.html" data-ajax="false" class=footerlink><img src="img/stats_line_chart_48.png" border="0" id=headerhistory></a>
+                    </li>
+                    <li><a href="settings.html" data-ajax="false" class=footerlink><img src="img/gear_zoom_48.png" border="0" id=headersettings></a>
+                    </li>
+                </div>
             </div><!-- /header -->
             <div class="ui-content" role="main" id=maincontent>
                 <div class=pagerelay></div>
@@ -51,7 +61,7 @@
                             <li class=mintab><a href='#mainbox' data-ajax='false' data-theme='a' class='ui-btn-active ui-state-persist'>Main Box</a></li>
                         </ul>
                     </div>
-                    <div id="mainbox" class="ui-content">
+                    <div id="mainbox">
                     	<div class=paramstable id=mainrelaylist>
                         </div>
                     </div>
@@ -116,23 +126,11 @@
                       </ul>
                     </li><!-- /collapsible -->
                     <li><a href="#" data-rel="close" id="downloadlabels">Download Labels from Portal</a></li>
-                    <li><a href="#" data-rel="close">Sync RA Date/Time w/ Phone</a></li>
+                    <li><a href="#" data-rel="close" id="synctime">Sync RA Date/Time w/ Phone</a></li>
                     <li><a href="javascript:send_command('v')" data-rel="close">Get RA Version</a></li>
                     <li><a href="javascript:send_command('boot')" data-rel="close">Reboot Controller</a></li>
                  </ul>
             </div><!-- /panel -->	    
-		    <div data-role="footer" data-position="fixed" data-id="myfooter">
-                <footer>
-                    <li><a href="status.html" data-ajax="false" class=footerlink><img src="img/bar_status.png" border="0"></a>
-                    </li>
-                    <li><a href="relay.html" data-ajax="false" class=footerlink><img src="img/bar_relays.png" border="0"></a>
-                    </li>
-                    <li><a href="history.html" data-ajax="false" class=footerlink><img src="img/bar_history.png" border="0"></a>
-                    </li>
-                    <li><a href="settings.html" data-ajax="false" class=footerlink><img src="img/bar_settings.png" border="0"></a>
-                  </li>
-                </footer>
-		    </div><!-- /footer -->            
         </div>    
 		<script type="text/javascript" src="cordova.js"></script>
         <script type="text/javascript" src="js/index.js"></script>
@@ -142,13 +140,13 @@
 			{
 				s+="<div>";
 				s+="<div class=relayvalue>";
-				s+="<fieldset data-type='horizontal' data-role='controlgroup'>";
+				s+="<fieldset data-type='horizontal' data-role='controlgroup' class='customfieldset'>";
 				s+="<input id='r" + a + "on' name='r" + a + "' value='on' type='radio'>";
-				s+="<label for='r" + a + "on' class=relaybutton>On</label>";
+				s+="<label for='r" + a + "on' class=relaybutton data-message='r" + a + "1'>On</label>";
 				s+="<input id='r" + a + "auto' name='r" + a + "' value='auto' type='radio'>";
-				s+="<label for='r" + a + "auto' class=relaybutton>Auto</label>";
+				s+="<label for='r" + a + "auto' class=relaybutton data-message='r" + a + "2'>Auto</label>";
 				s+="<input id='r" + a + "off' name='r" + a + "' value='off' type='radio'>";
-				s+="<label for='r" + a + "off' class=relaybutton>Off</label>";
+				s+="<label for='r" + a + "off' class=relaybutton data-message='r" + a + "0'>Off</label>";
 				s+="</fieldset>";
 				s+="</div>";
 				s+="<div>";
@@ -169,13 +167,13 @@
 						{
 							s+="<div>";
 							s+="<div class=relayvalue>";
-							s+="<fieldset data-type='horizontal' data-role='controlgroup'>";
+							s+="<fieldset data-type='horizontal' data-role='controlgroup' class='customfieldset'>";
 							s+="<input id='r" + a + b + "on' name='r" + a + b + "' value='on' type='radio'>";
-							s+="<label for='r" + a + b + "on' class=relaybutton>On</label>";
+							s+="<label for='r" + a + b + "on' class=relaybutton data-message='r" + a + b + "1'>On</label>";
 							s+="<input id='r" + a + b + "auto' name='r" + a + b + "' value='auto' type='radio'>";
-							s+="<label for='r" + a + b + "auto' class=relaybutton>Auto</label>";
+							s+="<label for='r" + a + b + "auto' class=relaybutton data-message='r" + a + b + "2'>Auto</label>";
 							s+="<input id='r" + a + b + "off' name='r" + a + b + "' value='off' type='radio'>";
-							s+="<label for='r" + a + b + "off' class=relaybutton>Off</label>";
+							s+="<label for='r" + a + b + "off' class=relaybutton data-message='r" + a + b + "0'>Off</label>";
 							s+="</fieldset>";
 							s+="</div>";
 							s+="<div>";

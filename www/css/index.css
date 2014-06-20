@@ -172,6 +172,7 @@ h1 {
 
 .pagesettings {
     background:url(../img/title_settings_48.png) no-repeat center top;
+	margin:0px auto;
 	width: 320px;
 	height: 31px;
 	margin-bottom: 10px;
@@ -476,6 +477,7 @@ body {
 
 .pagesettings {
     background:url(../img/title_settings_72.png) no-repeat center top;
+	margin:0px auto;
 	width: 400px;
 	height: 100px;
 	margin-bottom: 20px;
@@ -521,4 +523,69 @@ body {
 	padding:10px !important;
 }
 
+}
+
+@media only screen and (max-device-width : 350px)) { /* iphone */
+
+.ui-navbar li .ui-btn{
+	font-size:.9em !important;
+}
+body {
+	font-size:.7em !important;
+}
+
+.pagestatus {
+    background:url(../img/title_status_24.png) no-repeat center top;
+	margin:0px auto;
+	width: 260px;
+	height: 25px;
+	margin-bottom: 10px;
+}
+
+.pagerelay {
+    background:url(../img/title_relay_24.png) no-repeat center top;
+	margin:0px auto;
+	width: 260px;
+	height: 25px;
+	margin-bottom: 10px;
+}
+
+.pagehistory {
+    background:url(../img/title_graph_24.png) no-repeat center top;
+	margin:0px auto;
+	width: 260px;
+	height: 25px;
+	margin-bottom: 10px;
+}
+
+.pagesettings {
+    background:url(../img/title_settings_24.png) no-repeat center top;
+	margin:0px auto;
+	width: 260px;
+	height: 25px;
+	margin-bottom: 10px;
+}
+
+.relaybutton{
+	padding: 2px 12px 2px 12px !important;
+	font-size: .5em !important;
+}
+
+.relaylabel{
+	font-size:1.2em;
+	font-weight:bold;
+	padding-top: 13px;
+	height:23px !important;
+}
+
+.relaystatus{
+	float: left;
+	padding-top: 12px;
+	height:23px !important;
+	width: 28px !important;
+}
+
+.ui-btn{
+	font-size:.9em !important;
+}
 }

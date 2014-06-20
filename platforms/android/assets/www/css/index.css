@@ -172,6 +172,7 @@ h1 {
 
 .pagesettings {
     background:url(../img/title_settings_48.png) no-repeat center top;
+	margin:0px auto;
 	width: 320px;
 	height: 31px;
 	margin-bottom: 10px;
@@ -521,4 +522,14 @@ body {
 	padding:10px !important;
 }
 
+}
+
+@media only screen and (max-device-width : 350px)) { /* iphone */
+
+.ui-navbar li .ui-btn{
+	font-size:.9em !important;
+}
+body {
+	font-size:.7em !important;
+}
 }

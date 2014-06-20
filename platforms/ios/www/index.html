@@ -22,7 +22,7 @@
         <meta charset="utf-8" />
         <meta name="format-detection" content="telephone=no" />
         <!-- WARNING: for iOS 7, remove the width=device-width and height=device-height attributes. See https://issues.apache.org/jira/browse/CB-4323 -->
-        <meta name="viewport" content="user-scalable=no, initial-scale=.5, maximum-scale=.5, minimum-scale=.5, target-densitydpi=device-dpi" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
         <link rel="stylesheet" type="text/css" href="css/index.css" />
         <meta name="msapplication-tap-highlight" content="no" />
         <link rel="stylesheet" href="css/jquery.mobile-1.4.2.min.css" />
@@ -48,12 +48,27 @@
 		<script type="text/javascript" src="cordova.js"></script>
         <script type="text/javascript" src="js/index.js"></script>
         <script type="text/javascript">
+			//var width = (window.innerWidth > 0) ? window.innerWidth : screen.width;
+ 			//alert(width);
             app.initialize();
 			if (localStorage.getItem("num_controllers")==0 || localStorage.getItem("num_controllers")==null)
 			{
 				$("#controllerlist").html("No controllers configured yet.<br><br>Let's configure them.<br><br>You will need the ip address and port of your Reef Angel controller to proceed.<br><br>")
 				$("#nextdiv").removeClass("hiddentab");
 			}	
+			else if (localStorage.getItem("num_controllers")==1)
+			{
+				$.mobile.loading( 'show', {
+					text: 'Please wait',
+					textVisible: true,
+					theme: 'b',
+					html: ""
+				});
+				localStorage.setItem("controller_name",localStorage.getItem("controller_name_0"));
+				localStorage.setItem("controller_ip",localStorage.getItem("controller_ip_0"));
+				localStorage.setItem("controller_port",localStorage.getItem("controller_port_0"));
+				window.location.href="status.html";
+			}
 			else
 			{
 				$("#controllerlist").append("Which controller would you like to connect to?<br>");
