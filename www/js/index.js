@@ -422,7 +422,9 @@ $(document).ready(function(){
 	$("#setknob").on('vclick', function (event) {
 		send_command($('#changeknob').attr("data-message") + "," + $('#changeknob').val());
 	});
-	
+	$(".pagestatus").on('vclick', function (event) {
+		alert($(this).width());
+	});
 
 });
 
