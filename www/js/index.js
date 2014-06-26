@@ -61,6 +61,10 @@ var app = {
     }
 };
 $(document).ready(function(){
+	$(function() {
+		FastClick.attach(document.body);
+	});
+	$("#app_version").html("Reef Angel U-App v1.0.1");
 	for (a=0; a<localStorage.getItem("num_controllers"); a++)
 	{
 		var selected="";
@@ -266,17 +270,6 @@ $(document).ready(function(){
 		$('#btn_refresh').click();
     });
 	
-	$(document).on('focus', 'input, textarea', function() 
-	{
-		$.mobile.activePage.find("div[data-role='footer']").hide();
-	});
-	
-	
-	$(document).on('blur', 'input, textarea', function() 
-	{
-		$.mobile.activePage.find("div[data-role='footer']").show();
-	});
-	
 	$("#settings_next").on('vclick', function () {
 		window.location.href = 'addfirstcontroller.html';
 		return false;
@@ -352,7 +345,7 @@ $(document).ready(function(){
 	});
 	
 	$('.customfieldset').find('.ui-btn').on('vclick', function(event){      
-		send_command($(this).attr("data-message"));
+		send_command($(this).attr("data-message")); // relay command
 	});
 
 	$(".footerlink").on('vclick', function () {
@@ -421,9 +414,6 @@ $(document).ready(function(){
 	
 	$("#setknob").on('vclick', function (event) {
 		send_command($('#changeknob').attr("data-message") + "," + $('#changeknob').val());
-	});
-	$(".pagestatus").on('vclick', function (event) {
-		alert($(this).width());
 	});
 
 });
@@ -812,6 +802,7 @@ function send_command(command)
 			if(x.childNodes.length>1)
 				if(x.nodeName=="RA")
 				{
+					$.mobile.loading( "hide" );
 					WriteStorage(x);
 				}
 					
