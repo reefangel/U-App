@@ -65,6 +65,7 @@ $(document).ready(function(){
 		FastClick.attach(document.body);
 	});
 	$("#app_version").html("Reef Angel U-App v1.0.1");
+
 	for (a=0; a<localStorage.getItem("num_controllers"); a++)
 	{
 		var selected="";
@@ -415,7 +416,24 @@ $(document).ready(function(){
 	$("#setknob").on('vclick', function (event) {
 		send_command($('#changeknob').attr("data-message") + "," + $('#changeknob').val());
 	});
+	$("body").on("focus", "#daylighton", function() {
+        var currentField = $(this);
+        var time = currentField.val();
+        var myNewTime = new Date();
 
+        if(time) {
+            myNewTime=new Date("01/01/01 " + time.toString());
+        }
+        datePicker.show({
+            date : myNewTime,
+            mode : 'time'
+        }, function(returnDate) {
+			
+            currentField.val(new Date(returnDate).toString("hh:mm tt"));
+			$(':focus').blur();
+        });
+		$(':focus').blur();
+	});
 });
 
 function WriteStorage (x)

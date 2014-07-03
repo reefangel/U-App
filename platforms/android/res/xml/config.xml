@@ -11,6 +11,9 @@
     <feature name="Device">
         <param name="android-package" value="org.apache.cordova.device.Device" />
     </feature>
+    <feature name="DatePickerPlugin">
+        <param name="android-package" value="com.plugin.datepicker.DatePickerPlugin" />
+    </feature>
     <name>Reef Angel U-App</name>
     <description>
         HTML5 based application designed to interact with your Reef Angel Controller. It's a universal app that can be compiled and deployed in several platforms.

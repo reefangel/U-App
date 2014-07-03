@@ -40,6 +40,7 @@
 		7E7966E61810823500FA85AD /* icon-small.png in Resources */ = {isa = PBXBuildFile; fileRef = 7E7966DC1810823500FA85AD /* icon-small.png */; };
 		7E7966E71810823500FA85AD /* icon-small@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 7E7966DD1810823500FA85AD /* icon-small@2x.png */; };
 		A106B229BF1F4F029E632EDC /* CDVStatusBar.m in Sources */ = {isa = PBXBuildFile; fileRef = 121DB3055C5E4F3C8E4AD25B /* CDVStatusBar.m */; };
+		C5EAE96E27AC4E8DAF5F1F7D /* DatePicker.m in Sources */ = {isa = PBXBuildFile; fileRef = 14025D32493A4D55A66A404D /* DatePicker.m */; };
 		D4A0D8761607E02300AEF8BB /* Default-568h@2x~iphone.png in Resources */ = {isa = PBXBuildFile; fileRef = D4A0D8751607E02300AEF8BB /* Default-568h@2x~iphone.png */; };
 		D8AF3967A40E43639FFAA909 /* CDVSplashScreen.m in Sources */ = {isa = PBXBuildFile; fileRef = CFD89F13783343E08E5DCCB3 /* CDVSplashScreen.m */; };
 /* End PBXBuildFile section */
@@ -64,11 +65,13 @@
 /* Begin PBXFileReference section */
 		0B228AC8C6C94C89A9EBEB47 /* CDVStatusBar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CDVStatusBar.h; path = org.apache.cordova.statusbar/CDVStatusBar.h; sourceTree = "<group>"; };
 		121DB3055C5E4F3C8E4AD25B /* CDVStatusBar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CDVStatusBar.m; path = org.apache.cordova.statusbar/CDVStatusBar.m; sourceTree = "<group>"; };
+		14025D32493A4D55A66A404D /* DatePicker.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = DatePicker.m; path = Pluginscom.plugin.datepickerDatePicker.m; sourceTree = "<group>"; };
 		1D3623240D0F684500981E51 /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		1D3623250D0F684500981E51 /* AppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
 		1D6058910D05DD3D006BFB54 /* Reef Angel U-App.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Reef Angel U-App.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		1F766FDD13BBADB100FB74C0 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = Localizable.strings; sourceTree = "<group>"; };
 		1F766FE013BBADB100FB74C0 /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = Localizable.strings; sourceTree = "<group>"; };
+		231ADE86615541ECB906F55D /* DatePicker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DatePicker.h; path = Pluginscom.plugin.datepickerDatePicker.h; sourceTree = "<group>"; };
 		288765FC0DF74451002DB57D /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
 		29B97316FDCFA39411CA2CEA /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		301BF52D109A57CC0062928A /* CordovaLib.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = CordovaLib.xcodeproj; path = CordovaLib/CordovaLib.xcodeproj; sourceTree = "<group>"; };
@@ -238,6 +241,8 @@
 				6927F8A7244D49849F4A9E8B /* CDVSplashScreen.h */,
 				121DB3055C5E4F3C8E4AD25B /* CDVStatusBar.m */,
 				0B228AC8C6C94C89A9EBEB47 /* CDVStatusBar.h */,
+				14025D32493A4D55A66A404D /* DatePicker.m */,
+				231ADE86615541ECB906F55D /* DatePicker.h */,
 			);
 			name = Plugins;
 			path = "Reef Angel U-App/Plugins";
@@ -440,6 +445,7 @@
 				1FABFFC49977462498EEA8D2 /* CDVDevice.m in Sources */,
 				D8AF3967A40E43639FFAA909 /* CDVSplashScreen.m in Sources */,
 				A106B229BF1F4F029E632EDC /* CDVStatusBar.m in Sources */,
+				C5EAE96E27AC4E8DAF5F1F7D /* DatePicker.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -494,8 +500,8 @@
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_ENABLE_OBJC_ARC = YES;
-				CODE_SIGN_IDENTITY = "iPhone Developer: Roberto Imai (V59PLT3NEY)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Roberto Imai (V59PLT3NEY)";
+				CODE_SIGN_IDENTITY = "iPhone Distribution: Roberto Imai (5QQ276359C)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Roberto Imai (5QQ276359C)";
 				COPY_PHASE_STRIP = YES;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_OPTIMIZATION_LEVEL = 0;
@@ -520,7 +526,7 @@
 					"-ObjC",
 				);
 				PRODUCT_NAME = "Reef Angel U-App";
-				PROVISIONING_PROFILE = "89008848-6B72-4AF8-9F60-328E6DEC17A5";
+				PROVISIONING_PROFILE = "8254E7D8-B97D-42F5-A172-5ED1C43D643D";
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
@@ -530,8 +536,8 @@
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_ENABLE_OBJC_ARC = YES;
-				CODE_SIGN_IDENTITY = "iPhone Developer: Roberto Imai (V59PLT3NEY)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Roberto Imai (V59PLT3NEY)";
+				CODE_SIGN_IDENTITY = "iPhone Distribution: Roberto Imai (5QQ276359C)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Roberto Imai (5QQ276359C)";
 				COPY_PHASE_STRIP = NO;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Reef Angel U-App/Reef Angel U-App-Prefix.pch";
@@ -554,8 +560,8 @@
 					"-ObjC",
 				);
 				PRODUCT_NAME = "Reef Angel U-App";
-				PROVISIONING_PROFILE = "89008848-6B72-4AF8-9F60-328E6DEC17A5";
-				"PROVISIONING_PROFILE[sdk=*]" = "89008848-6B72-4AF8-9F60-328E6DEC17A5";
+				PROVISIONING_PROFILE = "8254E7D8-B97D-42F5-A172-5ED1C43D643D";
+				"PROVISIONING_PROFILE[sdk=*]" = "8254E7D8-B97D-42F5-A172-5ED1C43D643D";
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;

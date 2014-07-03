@@ -29,6 +29,7 @@
         <script src="js/jquery-1.9.1.min.js"></script>
         <script src="js/jquery.mobile-1.4.2.min.js"></script> 
         <script src="js/fastclick.js"></script>
+        <script src="js/date.js"></script>
         <title>Reef Angel U-App</title>
     </head>
     <body>
@@ -99,8 +100,15 @@
                             </div>                                                  
                         </div>
                     </div>
-                    <div id="internalmemorytab" class="ui-content">
-					<h1>Internal Memory</h1>
+                    <div id="internalmemorytab" class="ui-content" data-inset="true">
+                            <ul data-role="listview">
+		                    <li data-role="collapsible" data-inset="false" data-iconpos="right">
+                              <h3>Time Schedule</h3>
+                              <p>Please choose the settings for your Daylight and Actinic schedule. Delayed Start is useful for MH ballasts:</p>
+							  <label for"daylighton">Turn Daylights on at:</label>
+                              <input value="08:00 PM" id=daylighton class=timespinner/>
+                            </li><!-- /collapsible -->
+                            </ul>
                     </div>
                 </div>
             </div><!-- /content -->

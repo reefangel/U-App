@@ -27,6 +27,10 @@
                         {
                             "xml": "<preference name=\"StatusBarBackgroundColor\" value=\"#000000\" />",
                             "count": 1
+                        },
+                        {
+                            "xml": "<feature name=\"DatePicker\"><param name=\"ios-package\" value=\"DatePicker\" /></feature>",
+                            "count": 1
                         }
                     ]
                 }
@@ -51,6 +55,9 @@
             "PACKAGE_NAME": "com.reefangel.uapp"
         },
         "org.apache.cordova.statusbar": {
+            "PACKAGE_NAME": "com.reefangel.uapp"
+        },
+        "com.plugin.datepicker": {
             "PACKAGE_NAME": "com.reefangel.uapp"
         }
     },

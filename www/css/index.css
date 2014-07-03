@@ -413,7 +413,12 @@ h3 {
 	margin-top:10px;
 }
 
-@media only screen and (max-device-width : 320px)) { /* iphone */
+
+#MemSave {
+	margin-top:30px;	
+}
+
+@media only screen and (max-device-width : 320px){ /* iphone */
 
 .ui-navbar li .ui-btn{
 	font-size:.9em !important;
@@ -478,7 +483,7 @@ body {
 }
 }
 
-@media only screen and (min-device-width : 600px) and (min-device-height : 480px) { /* 7" tablets */
+@media only screen and (min-width : 600px) and (min-device-height : 480px) { /* 7" tablets */
 
 .ui-navbar li .ui-btn{
 	font-size:1.1em !important;
