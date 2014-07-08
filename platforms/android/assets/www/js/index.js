@@ -1228,7 +1228,7 @@ function CreateChart()
 	seriesID = 0;
 
 	$.each(names, function (i, name) {
-		$.getJSON('http://forum.reefangel.com/status/jsonp.aspx?id=reefangel&filter=' + name.toLowerCase() + '&callback=?', function (data) {
+		$.getJSON('http://forum.reefangel.com/status/jsonp.aspx?id=' + localStorage.getItem("forum_username") + '&filter=' + name.toLowerCase() + '&callback=?', function (data) {
 			var pcolor;
 			var tname;
 			var ydec;
