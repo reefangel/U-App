@@ -61,7 +61,7 @@
                     <div data-role="navbar" class=paramsnavbar>
                         <ul id=settingstabs>
                           <li class=mintab><a href="#controllertab" data-ajax="false" data-theme="a" class="ui-btn-active ui-state-persist">Controller</a></li>
-                          <li class=mintab><a href="#internalmemorytab" data-ajax="false" data-theme="a">Internal Memory</a></li>
+                          <li class=mintab><a href="#internalmemorytab" data-ajax="false" data-theme="a" id="mem_btn">Internal Memory</a></li>
                         </ul>
                     </div>
                     <div id="controllertab">
@@ -101,14 +101,120 @@
                         </div>
                     </div>
                     <div id="internalmemorytab" class="ui-content" data-inset="true">
-                            <ul data-role="listview">
-		                    <li data-role="collapsible" data-inset="false" data-iconpos="right">
-                              <h3>Time Schedule</h3>
-                              <p>Please choose the settings for your Daylight and Actinic schedule. Delayed Start is useful for MH ballasts:</p>
-							  <label for"daylighton">Turn Daylights on at:</label>
-                              <input value="08:00 PM" id=daylighton class=timespinner/>
-                            </li><!-- /collapsible -->
-                            </ul>
+                    	<div id="internalmemoryform">
+                            <fieldset data-role="collapsible" data-iconpos="right">
+                                <legend>Time Schedule</legend>
+                                <p>Please choose the settings for your Daylight and Actinic schedule. Delayed Start is useful for MH ballasts:</p>
+                                <label for="daylighton"><strong>Turn Daylights on at:</strong></label>
+                                <input value="12:00 AM" id="daylighton" readonly/>
+                                <label for="daylightoff"><strong>Turn Daylights off at:</strong></label>
+                                <input value="12:00 AM" id="daylightoff" readonly/>
+                                <label for="daylightdelayed"><strong>Delayed Start (m):</strong></label>
+                                <input type="number" value="0" id="daylightdelayed" min="0"max="255" step="1"/>
+                                <label for="actinicoffset"><strong>Actinic Offset (m):</strong></label>
+                                <input type="number" value="0" id="actinicoffset" min="0"max="255" step="1"/>
+                            </fieldset>
+                            <fieldset data-role="collapsible" data-iconpos="right">
+                                <legend>Heater/Chiller</legend>
+                                <p>Please choose the temperature for your heater and chiller/fan:</p>
+                                <label for="heateron"><strong>Turn Heater on at:</strong></label>
+                                <input type="number" value="0" id="heateron" step="0.1"/>
+                                <label for="heateroff"><strong>Turn Heater off at:</strong></label>
+                                <input type="number" value="0" id="heateroff" step="0.1"/>
+                                <label for="chilleron"><strong>Turn Chiller/Fan on at:</strong></label>
+                                <input type="number" value="0" id="chilleron" step="0.1"/>
+                                <label for="chilleroff"><strong>Turn Chiller/Fan off at:</strong></label>
+                                <input type="number" value="0" id="chilleroff" step="0.1"/>
+                                <label for="overheat"><strong>Overheat Temperature:</strong></label>
+                                <input type="number" value="0" id="overheat" step="0.1"/>
+                                
+                            </fieldset>
+                            <fieldset data-role="collapsible" data-iconpos="right">
+                                <legend>Auto Top Off</legend>
+                                <p>Please choose the timeout for your Auto Top Off:</p>
+                                <label for="atotimeout"><strong>ATO Timeout (s):</strong></label>
+                                <input type="number" value="0" id="atotimeout" min="0"max="32000" step="1"/>
+                                <p>Please choose the Water Level expansion High and Low levels:</p>
+                                <label for="waterlevellow"><strong>Low level (%):</strong></label>
+                                <input type="number" value="0" id="waterlevellow" min="0"max="100" step="1"/>
+                                <label for="waterlevelhigh"><strong>High level (%):</strong></label>
+                                <input type="number" value="0" id="waterlevelhigh" min="0"max="100" step="1"/>
+                            </fieldset>
+                            <fieldset data-role="collapsible" data-iconpos="right">
+                                <legend>Wavemaker</legend>
+                                <p>Please choose the cycle for your wavemaker:</p>
+                                <label for="wmtimer"><strong>Cycle every (s):</strong></label>
+                                <input type="number" value="0" id="wmtimer" min="0"max="32000" step="1"/>
+                            </fieldset>
+                            <fieldset data-role="collapsible" data-iconpos="right">
+                                <legend>CO2 Control</legend>
+                                <p>Please choose the pH for your CO2 controlled device:</p>
+                                <label for="co2controlon"><strong>Turn on at:</strong></label>
+                                <input type="number" value="0" id="co2controlon" min="0"max="14" step=".01"/>
+                                <label for="co2controloff"><strong>Turn off at:</strong></label>
+                                <input type="number" value="0" id="co2controloff" min="0"max="14" step=".01"/>
+                            </fieldset>
+                            <fieldset data-role="collapsible" data-iconpos="right">
+                                <legend>pH Control</legend>
+                                <p>Please choose the pH for your pH controlled device:</p>
+                                <label for="phcontrolon"><strong>Turn on at:</strong></label>
+                                <input type="number" value="0" id="phcontrolon" min="0"max="14" step=".01"/>
+                                <label for="phcontroloff"><strong>Turn off at:</strong></label>
+                                <input type="number" value="0" id="phcontroloff" min="0"max="14" step=".01"/>
+                            </fieldset>
+                            <fieldset data-role="collapsible" data-iconpos="right">
+                                <legend>Dosing Pump</legend>
+                                <p>Please choose the cycle and duration for your dosing pumps:</p>
+								<h4>Dosing Pump 1 (0 minutes offset)</h4>
+                                <label for="dp1interval"><strong>Turn on every (m):</strong></label>
+                                <input type="number" value="0" id="dp1interval" min="0"max="32000" step="1"/>
+                                <label for="dp1interval"><strong>Duration (s):</strong></label>
+                                <input type="number" value="0" id="dp1timer" min="0"max="255" step="1"/>
+                                <h4>Dosing Pump 2 (5 minutes offset)</h4>
+                                <label for="dp2interval"><strong>Turn on every (m):</strong></label>
+                                <input type="number" value="0" id="dp2interval" min="0"max="32000" step="1"/>
+                                <label for="dp2interval"><strong>Duration (s):</strong></label>
+                                <input type="number" value="0" id="dp2timer" min="0"max="255" step="1"/>
+								<h4>Dosing Pump 3 (10 minutes offset)</h4>
+                                <label for="dp3interval"><strong>Turn on every (m):</strong></label>
+                                <input type="number" value="0" id="dp3interval" min="0"max="32000" step="1"/>
+                                <label for="dp3interval"><strong>Duration (s):</strong></label>
+                                <input type="number" value="0" id="dp3timer" min="0"max="255" step="1"/>
+                            </fieldset>
+                            </fieldset>
+                            <fieldset data-role="collapsible" data-iconpos="right">
+                                <legend>Delayed Start</legend>
+                                <p>Please choose the delay you would like to wait to turn your devices after feeding/water change mode and power cycle:</p>
+                                <label for="delayedon"><strong>Delayed Start (m):</strong></label>
+                                <input type="number" value="0" id="delayedon" min="0"max="255" step="1"/>
+                            </fieldset>
+                            <fieldset data-role="collapsible" data-iconpos="right">
+                                <legend>Standard Dimming</legend>
+                                <p>Please choose the start %, end % and duration for each standard dimming channel. Duration is only applicable for Slope.</p>
+                                <h4>Daylight Channel:</h4>
+                                <label for="pwmslopestartd"><strong>Start %:</strong></label>
+                                <input type="number" value="0" id="pwmslopestartd" min="0"max="100" step="1"/>
+                                <label for="pwmslopeendd"><strong>End %:</strong></label>
+                                <input type="number" value="0" id="pwmslopeendd" min="0"max="100" step="1"/>
+                                <label for="pwmslopedurationd"><strong>Duration (m):</strong></label>
+                                <input type="number" value="0" id="pwmslopedurationd" min="0"max="255" step="1"/>
+                                <h4>Actinic Channel:</h4>
+                                <label for="pwmslopestarta"><strong>Start %:</strong></label>
+                                <input type="number" value="0" id="pwmslopestarta" min="0"max="100" step="1"/>
+                                <label for="pwmslopeenda"><strong>End %:</strong></label>
+                                <input type="number" value="0" id="pwmslopeenda" min="0"max="100" step="1"/>
+                                <label for="pwmslopedurationa"><strong>Duration (m):</strong></label>
+                                <input type="number" value="0" id="pwmslopedurationa" min="0"max="255" step="1"/>
+                            </fieldset>
+                            <fieldset data-role="collapsible" data-iconpos="right" id="internalmemorydimmingexpansion" class="hiddentab">
+                                <legend>Dimming Expansion</legend>
+                                <p>Please choose the start %, end % and duration for each expansion dimming channel. Duration is only applicable for Slope.</p>
+                            </fieldset>
+                        </div>
+                        <div id="memstatus"></div>
+                        <div id="memoryresult"></div>
+                        <a href="#" data-role="button" id=MemSave>Save</a>
+                        <a href="#" data-role="button"id=MemCancel>Cancel</a>
                     </div>
                 </div>
             </div><!-- /content -->
@@ -149,6 +255,8 @@
 		<script type="text/javascript" src="cordova.js"></script>
         <script type="text/javascript" src="js/index.js"></script>
         <script>
+			CheckExpansion();
+			UpdateLabels();
 			for (a=0; a<localStorage.getItem("num_controllers"); a++)
 			{
 				$("#controller_list").append("<li data-icon='grid'><a href='#popupMenu' data-transition='fade' data-rel='popup' id='controller_list_" + a + "' class='controllerbutton'>" + localStorage.getItem("controller_name_"+a) + "</a></li>");

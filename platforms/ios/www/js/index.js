@@ -28,6 +28,9 @@ var rfcolors = ["#FF9900","#0000DD","#DD0000","#006600","#0099FF","#990099"];
 var rfmodes = ["Constant","Lagoon","Reef Crest","Short Pulse","Long Pulse","Nutrient Transport","Tidal Swell","Feeding","Feeding","Night","Storm","Custom","Else"];
 var rfimages= ["constant.png","lagoon.png","reefcrest.png","shortpulse.png","longpulse.png","ntm.png","tsm.png","feeding.png","feeding.png","night.png","storm.png","custom.png","custom.png"];
 var rfmodecolors = ["#00682e","#ffee00","#ffee00","#16365e","#d99593","#eb70ff","#eb70ff","#000000","#000000","#000000","#000000","#000000","#000000"];
+var MemString=new Array(); 
+var MemURL=new Array();
+var im;
 
 var app = {
     // Application Constructor
@@ -78,8 +81,8 @@ $(document).ready(function(){
 		localStorage.setItem("controller_name",localStorage.getItem("controller_name_"+$(this).find('option:selected').val()));
 		localStorage.setItem("controller_ip",localStorage.getItem("controller_ip_"+$(this).find('option:selected').val()));
 		localStorage.setItem("controller_port",localStorage.getItem("controller_port_"+$(this).find('option:selected').val()));
+		$('#btn_refresh').attr("data-message","controllerchange")
 		$('#btn_refresh').click();
-		$('#downloadlabels').click();
 	});
 
 	$("#pwmdinput").next().children("div").first().css("background-image","-webkit-gradient(linear,left top,left bottom,from(#FF9900),to(#EEEEEE))");
@@ -119,7 +122,20 @@ $(document).ready(function(){
 						theme: 'b',
 						html: ""
 					});
+					$('#btn_refresh').attr("data-message","");
 					window.location.href="status.html";
+					return false;
+				}
+				if ($('#btn_refresh').attr("data-message") == "controllerchange")
+				{
+					$.mobile.loading( 'show', {
+						text: 'Please wait',
+						textVisible: true,
+						theme: 'b',
+						html: ""
+					});
+					$('#btn_refresh').attr("data-message","");
+					setTimeout( function(){ $('#downloadlabels').click() }, 1000 );
 					return false;
 				}
 			},
@@ -136,6 +152,7 @@ $(document).ready(function(){
 							theme: 'b',
 							html: ""
 						});
+						$('#btn_refresh').attr("data-message","");
 						window.location.href="status.html";
 						return false;
 					}
@@ -416,7 +433,26 @@ $(document).ready(function(){
 	$("#setknob").on('vclick', function (event) {
 		send_command($('#changeknob').attr("data-message") + "," + $('#changeknob').val());
 	});
-	$("body").on("focus", "#daylighton", function() {
+
+	$("#daylightdelayed, #actinicoffset, #atotimeout, #waterlevellow, #waterlevelhigh, #wmtimer, #dp1interval, #dp1timer, #dp2interval, #dp2timer, #dp3interval, #dp3timer, #delayedon, #pwmslopestartd, #pwmslopeendd, #pwmslopedurationd, #pwmslopestarta, #pwmslopeenda, #pwmslopedurationa").on("blur", function () {
+		var a=parseInt($(this).val());
+		if (isNaN(a)) a=0;
+		$(this).val(a);
+	});
+	$("#heateron, #heateroff, #chilleron, #chilleroff, #overheat").on("blur", function () {
+		var a=parseFloat($(this).val()).toFixed(1)
+		if (isNaN(a)) a=0;
+		$(this).val(a);
+	});
+
+	$("#co2controlon, #co2controloff, #phcontrolon, #phcontroloff").on("blur", function () {
+		var a=parseFloat($(this).val()).toFixed(2)
+		if (isNaN(a)) a=0;
+		$(this).val(a);
+	});
+
+	$("#daylighton, #daylightoff").on("vclick", function() {	
+		$('#MemCancel').focus();
         var currentField = $(this);
         var time = currentField.val();
         var myNewTime = new Date();
@@ -424,16 +460,214 @@ $(document).ready(function(){
         if(time) {
             myNewTime=new Date("01/01/01 " + time.toString());
         }
-        datePicker.show({
-            date : myNewTime,
-            mode : 'time'
-        }, function(returnDate) {
+		datePicker.show({
+			date : myNewTime,
+			mode : 'time'
+		}, function(returnDate) {
 			
-            currentField.val(new Date(returnDate).toString("hh:mm tt"));
-			$(':focus').blur();
-        });
-		$(':focus').blur();
+			currentField.val(new Date(returnDate).toString("hh:mm tt"));
+			$('#MemCancel').focus();
+		});
+		$('#MemCancel').focus();
 	});
+	
+	$("#mem_btn").click(function() {
+		im="";		
+		$.mobile.loading( 'show', {
+			text: 'Connecting to Reef Angel',
+			textVisible: true,
+			theme: 'b',
+			html: ""
+		});
+		var jqxhr = $.ajax({
+			url: controller_command("mr"),
+			timeout: 10000,
+			success: function(data) {
+				$.mobile.loading( "hide" );
+				x=data.documentElement;  
+				if(x.childNodes.length==1)
+				{
+					if(x.nodeName=="MEM")
+					{
+						im=x.firstChild.data;
+						$('#daylightdelayed').val(getbytevalue(im,35))
+						$('#actinicoffset').val(getbytevalue(im,84))
+						$('#daylighton').val(new Date("01/01/01 " + getbytevalue(im,4) + ":" + getbytevalue(im,5)).toString("hh:mm tt"))
+						$('#daylightoff').val(new Date("01/01/01 " + getbytevalue(im,6) + ":" + getbytevalue(im,7)).toString("hh:mm tt"))
+						$('#heateron').val(parseFloat(getintvalue(im,22)/10).toFixed(1))
+						$('#heateroff').val(parseFloat(getintvalue(im,24)/10).toFixed(1))
+						$('#chilleron').val(parseFloat(getintvalue(im,26)/10).toFixed(1))
+						$('#chilleroff').val(parseFloat(getintvalue(im,28)/10).toFixed(1))
+						$('#overheat').val(parseFloat(getintvalue(im,18)/10).toFixed(1))
+						$('#atotimeout').val(getintvalue(im,76))
+						$('#waterlevellow').val(getbytevalue(im,131))
+						$('#waterlevelhigh').val(getbytevalue(im,132))
+						$('#wmtimer').val(getintvalue(im,8))
+						$('#co2controlon').val(parseFloat(getintvalue(im,85)/100).toFixed(2))
+						$('#co2controloff').val(parseFloat(getintvalue(im,87)/100).toFixed(2))
+						$('#phcontrolon').val(parseFloat(getintvalue(im,89)/100).toFixed(2))
+						$('#phcontroloff').val(parseFloat(getintvalue(im,91)/100).toFixed(2))
+						$('#dp1interval').val(getintvalue(im,43))
+						$('#dp1timer').val(getbytevalue(im,12))
+						$('#dp2interval').val(getintvalue(im,45))
+						$('#dp2timer').val(getbytevalue(im,13))
+						$('#dp3interval').val(getintvalue(im,134))
+						$('#dp3timer').val(getbytevalue(im,133))
+						$('#delayedon').val(getbytevalue(im,120))
+						$('#pwmslopestartd').val(getbytevalue(im,49))
+						$('#pwmslopeendd').val(getbytevalue(im,50))
+						$('#pwmslopedurationd').val(getbytevalue(im,51))
+						$('#pwmslopestarta').val(getbytevalue(im,52))
+						$('#pwmslopeenda').val(getbytevalue(im,53))
+						$('#pwmslopedurationa').val(getbytevalue(im,54))
+						m=58;
+						for (a=0;a<6;a++)
+						{
+							$('#pwmslopestart'+a).val(getbytevalue(im,m++))
+							$('#pwmslopeend'+a).val(getbytevalue(im,m++))
+							$('#pwmslopeduration'+a).val(getbytevalue(im,m++))
+						}
+					}
+					else
+					{
+						alert("Error downloading memory settings");	
+					}
+				}
+			}
+		});
+
+	});
+	$('#MemSave').click(function() {
+		if (im.length>250)
+		{
+			$('#memoryresult').html("");
+			$('#memstatus').html("<center><img src='img/loading.gif'></center>");
+			d=im;
+			MemString= []; 
+			MemURL= []; 
+			if ($('#daylightdelayed').val()!=getbytevalue(d,35))
+				SaveMemory("Daylights Delayed Start", "mb235," + $('#daylightdelayed').val());
+			if ($('#actinicoffset').val()!=getbytevalue(d,84))
+				SaveMemory("Actinic Offset", "mb284," + $('#actinicoffset').val());
+			if ($('#daylighton').val()!=new Date("01/01/01 " + getbytevalue(im,4) + ":" + getbytevalue(im,5)).toString("hh:mm tt"))
+			{
+				SaveMemory("Daylights On Hour", "mb204," + new Date(Date.parse($('#daylighton').val())).getHours());
+				SaveMemory("Daylights On Minute", "mb205," + new Date(Date.parse($('#daylighton').val())).getMinutes());
+			}
+			if ($('#daylightoff').val()!=new Date("01/01/01 " + getbytevalue(im,6) + ":" + getbytevalue(im,7)).toString("hh:mm tt"))
+			{
+				SaveMemory("Daylights Off Hour", "mb206," + new Date(Date.parse($('#daylightoff').val())).getHours());
+				SaveMemory("Daylights Off Minute", "mb207," + new Date(Date.parse($('#daylightoff').val())).getMinutes());
+			}
+			if ($('#heateron').val()!=getintvalue(d,22)/10)
+				SaveMemory("Heater On", "mi222," + Math.round($('#heateron').val()*10));
+			if ($('#heateroff').val()!=getintvalue(d,24)/10)
+				SaveMemory("Heater Off", "mi224," + Math.round($('#heateroff').val()*10));
+			if ($('#chilleron').val()!=getintvalue(d,26)/10)
+				SaveMemory("Chiller On", "mi226," + Math.round($('#chilleron').val()*10));
+			if ($('#chilleroff').val()!=getintvalue(d,28)/10)
+				SaveMemory("Chiller Off", "mi228," + Math.round($('#chilleroff').val()*10));
+			if ($('#overheat').val()!=getintvalue(d,18)/10)
+				SaveMemory("Overheat Temperature", "mi218," + Math.round($('#overheat').val()*10));
+			if ($('#atotimeout').val()!=getintvalue(d,76))
+				SaveMemory("Auto Top Off Timeout", "mi276," + $('#atotimeout').val());
+			if ($('#wmtimer').val()!=getintvalue(d,8))
+				SaveMemory("Wavemaker Timer", "mi208," + $('#wmtimer').val());
+			if ($('#co2controlon').val()!=getintvalue(d,85)/100)
+				SaveMemory("CO2 Control On", "mi285," + Math.round($('#co2controlon').val()*100));
+			if ($('#co2controloff').val()!=getintvalue(d,87)/100)
+				SaveMemory("CO2 Control Off", "mi287," + Math.round($('#co2controloff').val()*100));
+			if ($('#phcontrolon').val()!=getintvalue(d,89)/100)
+				SaveMemory("pH Control Off", "mi289," + Math.round($('#phcontrolon').val()*100));
+			if ($('#phcontroloff').val()!=getintvalue(d,91)/100)
+				SaveMemory("pH Control Off", "mi291," + Math.round($('#phcontroloff').val()*100));
+			if ($('#dp1interval').val()!=getintvalue(d,43))
+				SaveMemory("Dosing Pump 1 Interval", "mi243," + $('#dp1interval').val());
+			if ($('#dp1timer').val()!=getbytevalue(d,12))
+				SaveMemory("Dosing Pump 1 Timer", "mb212," + $('#dp1timer').val());
+			if ($('#dp2interval').val()!=getintvalue(d,45))
+				SaveMemory("Dosing Pump 2 Interval", "mi245," + $('#dp2interval').val());
+			if ($('#dp2timer').val()!=getbytevalue(d,13))
+				SaveMemory("Dosing Pump 2 Timer", "mb213," + $('#dp2timer').val());
+			if ($('#dp3interval').val()!=getintvalue(d,134))
+				SaveMemory("Dosing Pump 3 Interval", "mi334," + $('#dp3interval').val());
+			if ($('#dp3timer').val()!=getbytevalue(d,133))
+				SaveMemory("Dosing Pump 3 Timer", "mb333," + $('#dp3timer').val());
+			if ($('#delayedon').val()!=getbytevalue(d,120))			
+				SaveMemory("Delayed Start", "mb320," + $('#delayedon').val());
+			if ($('#pwmslopestartd').val()!=getbytevalue(d,49))			
+				SaveMemory("Daylight Dimming Start %", "mb249," + $('#pwmslopestartd').val());
+			if ($('#pwmslopeendd').val()!=getbytevalue(d,50))			
+				SaveMemory("Daylight Dimming End %", "mb250," + $('#pwmslopeendd').val());
+			if ($('#pwmslopedurationd').val()!=getbytevalue(d,51))			
+				SaveMemory("Daylight Dimming Duration", "mb251," + $('#pwmslopedurationd').val());
+			if ($('#pwmslopestarta').val()!=getbytevalue(d,52))			
+				SaveMemory("Actinic Dimming Start %", "mb252," + $('#pwmslopestarta').val());
+			if ($('#pwmslopeenda').val()!=getbytevalue(d,53))			
+				SaveMemory("Actinic Dimming End %", "mb253," + $('#pwmslopeenda').val());
+			if ($('#pwmslopedurationa').val()!=getbytevalue(d,54))			
+				SaveMemory("Actinic Dimming Duration", "mb254," + $('#pwmslopedurationa').val());
+			if ($('#waterlevellow').val()!=getbytevalue(d,131))			
+				SaveMemory("Low Water Level", "mb331," + $('#waterlevellow').val());
+			if ($('#waterlevelhigh').val()!=getbytevalue(d,132))			
+				SaveMemory("High Water Level", "mb332," + $('#waterlevelhigh').val());
+			m=58;
+			for (a=0;a<6;a++)
+			{
+				if ($('#pwmslopestart'+a).val()!=getbytevalue(d,m))
+				{
+					t=200+m;
+					SaveMemory("Dimming Expansion Channel " + a + " Start %", "mb" + t + "," + $('#pwmslopestart'+a).val());
+				}
+				m++;
+				if ($('#pwmslopeend'+a).val()!=getbytevalue(d,m))	
+				{		
+					t=200+m;
+					SaveMemory("Dimming Expansion Channel " + a + " End %", "mb" + t + "," + $('#pwmslopeend'+a).val());
+				}
+				m++;
+				if ($('#pwmslopeduration'+a).val()!=getbytevalue(d,m))
+				{			
+					t=200+m;
+					SaveMemory("Dimming Expansion Channel " + a + " Duration", "mb" + t + "," + $('#pwmslopeduration'+a).val());
+				}
+				m++;
+			}
+			var i = 0; 
+			function nextCall() { 
+				if(i == MemString.length)
+				{
+					$('#memoryresult').html($('#memoryresult').html() + "<br>Done.");
+					$('#memstatus').html("");
+					return; //last call was last item in the array
+				} 
+				$('#memoryresult').html($('#memoryresult').html() + "<br>" + MemString[i]);
+				t=controller_command(MemURL[i++]);
+				$.ajax({ 
+					url:t, 
+					success: function(data){       
+						$('#memoryresult').html($('#memoryresult').html() + " - " + $(data).text());  
+						nextCall(); 
+					},
+					error: function(data){       
+						$('#memoryresult').html($('#memoryresult').html() + " - " + $(data).text());  
+						nextCall(); 
+					} 
+				}); 
+			} 
+			nextCall();								
+		}
+	});
+	$('#MemCancel').click(function() {
+		$.mobile.loading( 'show', {
+			text: 'Please wait',
+			textVisible: true,
+			theme: 'b',
+			html: ""
+		});
+		window.location.href="settings.html";
+	});
+	
 });
 
 function WriteStorage (x)
@@ -679,6 +913,10 @@ function UpdateLabels()
 		if (localStorage.getItem(labels[a])==null) localStorage.setItem(labels[a],defaultlabels[a]);
 		$('#'+labels[a]).html(localStorage.getItem(labels[a]));		
 	}
+	for (a=0;a<6;a++)
+	{
+		$("#pwmslope"+a+"n").html(localStorage.getItem("pwme"+a+"n"));
+	}
 }
 
 function CheckExpansion()
@@ -688,11 +926,24 @@ function CheckExpansion()
 
 	if ((EM & 1<<0) != 0)
 	{
+		$("#internalmemorydimmingexpansion").removeClass("hiddentab");
 		for (a=0;a<6;a++)
 		{
 			$("#dimmingtab").append("<label for='pwme"+a+"input' id='pwme"+a+"n' class='dimminglabel'></label>");
 			$("#dimmingtab").append("<div class='dimmingvalue' id='pwme"+a+"'>0%</div>");
 			$("#dimmingtab").append("<input id='pwme"+a+"input' name='pwme"+a+"input' value='0' type='range' max='100' min='0' data-highlight='true' disabled='disabled' data-mini='true' data-message='" + (a+2) + "' data-color='#006600'>");
+			$("#internalmemorydimmingexpansion").append("<h4 id=pwmslope" + a + "n>Channel " + a + ":</h4>");
+			$("#internalmemorydimmingexpansion").append("<label for='pwmslopestart" + a + "'><strong>Start %:</strong></label>");
+			$("#internalmemorydimmingexpansion").append("<input type='number' value='0' id='pwmslopestart" + a + "' min='0'max='100' step='1'/>");
+			$("#internalmemorydimmingexpansion").append("<label for='pwmslopeend" + a + "'><strong>End %:</strong></label>");
+			$("#internalmemorydimmingexpansion").append("<input type='number' value='0' id='pwmslopeend" + a + "' min='0'max='100' step='1'/>");
+			$("#internalmemorydimmingexpansion").append("<label for='pwmslopeduration" + a + "'><strong>Duration (m):</strong></label>");
+			$("#internalmemorydimmingexpansion").append(" <input type='number' value='0' id='pwmslopeduration" + a + "' min='0'max='255' step='1'/>");
+			$("#pwmslopestart" + a + ", #pwmslopeend" + a + ", #pwmslopeduration" + a ).on("blur", function () {
+				var a=parseInt($(this).val());
+				if (isNaN(a)) a=0;
+				$(this).val(a);
+			});
 		}
 	}
 	if ((EM & 1<<1) != 0)
@@ -1145,3 +1396,23 @@ function DrawChart() {
 		series: seriesOptions
 	});
 }	
+
+function SaveMemory(s,l)
+{
+	MemString.push(s);
+	MemURL.push(l);
+}
+
+function getbytevalue(d,i)
+{
+	d=d.replace("<MEM>","")
+	d=d.replace("</MEM>","")
+	return parseInt(d.substr(i*2,2),16);
+}
+
+function getintvalue(d,i)
+{
+	d=d.replace("<MEM>","")
+	d=d.replace("</MEM>","")
+	return parseInt(d.substr((i+1)*2,2) + d.substr(i*2,2),16);
+}
