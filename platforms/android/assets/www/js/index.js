@@ -688,11 +688,11 @@ function WriteStorage (x)
 	SaveStorageItem("lastupdate",new Date());
 	if(x.getElementsByTagName('ID').item(0).hasChildNodes())
 		SaveStorageItem("forum_username",x.getElementsByTagName('ID').item(0).firstChild.data);
-	SaveStorageItem("em",x.getElementsByTagName('EM').item(0).firstChild.data);
-	SaveStorageItem("em1",x.getElementsByTagName('EM1').item(0).firstChild.data);
-	SaveStorageItem("rem",x.getElementsByTagName('REM').item(0).firstChild.data);
-	SaveStorageItem("sf",x.getElementsByTagName('SF').item(0).firstChild.data);
-	SaveStorageItem("af",x.getElementsByTagName('AF').item(0).firstChild.data);
+	if(x.getElementsByTagName('EM').length>0) SaveStorageItem("em",x.getElementsByTagName('EM').item(0).firstChild.data);
+	if(x.getElementsByTagName('EM1').length>0) SaveStorageItem("em1",x.getElementsByTagName('EM1').item(0).firstChild.data);
+	if(x.getElementsByTagName('REM').length>0) SaveStorageItem("rem",x.getElementsByTagName('REM').item(0).firstChild.data);
+	if(x.getElementsByTagName('SF').length>0) SaveStorageItem("sf",x.getElementsByTagName('SF').item(0).firstChild.data);
+	if(x.getElementsByTagName('AF').length>0) SaveStorageItem("af",x.getElementsByTagName('AF').item(0).firstChild.data);
 	SaveStorageItem("t1",x.getElementsByTagName('T1').item(0).firstChild.data);
 	SaveStorageItem("t2",x.getElementsByTagName('T2').item(0).firstChild.data);
 	SaveStorageItem("t3",x.getElementsByTagName('T3').item(0).firstChild.data);
@@ -722,10 +722,10 @@ function WriteStorage (x)
 	}
 	SaveStorageItem("atolow",x.getElementsByTagName('ATOLOW').item(0).firstChild.data);
 	SaveStorageItem("atohigh",x.getElementsByTagName('ATOHIGH').item(0).firstChild.data);
-	SaveStorageItem("pwma",x.getElementsByTagName('PWMA').item(0).firstChild.data);
-	SaveStorageItem("pwmd",x.getElementsByTagName('PWMD').item(0).firstChild.data);
-	SaveStorageItem("pwmao",x.getElementsByTagName('PWMAO').item(0).firstChild.data);
-	SaveStorageItem("pwmdo",x.getElementsByTagName('PWMDO').item(0).firstChild.data);
+	if(x.getElementsByTagName('PWMA').length>0) SaveStorageItem("pwma",x.getElementsByTagName('PWMA').item(0).firstChild.data);
+	if(x.getElementsByTagName('PWMD').length>0) SaveStorageItem("pwmd",x.getElementsByTagName('PWMD').item(0).firstChild.data);
+	if(x.getElementsByTagName('PWMAO').length>0) SaveStorageItem("pwmao",x.getElementsByTagName('PWMAO').item(0).firstChild.data);
+	if(x.getElementsByTagName('PWMDO').length>0) SaveStorageItem("pwmdo",x.getElementsByTagName('PWMDO').item(0).firstChild.data);
 	if(x.getElementsByTagName('PWME0').length>0)
 	{
 		for (a=0;a<6;a++)
