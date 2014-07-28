@@ -71,7 +71,7 @@ $(document).ready(function(){
 	$(function() {
 		FastClick.attach(document.body);
 	});
-	$("#app_version").html("Reef Angel U-App v1.0.1");
+	$("#app_version").html("Reef Angel U-App v1.0.2");
 
 	for (a=0; a<localStorage.getItem("num_controllers"); a++)
 	{

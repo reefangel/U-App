@@ -28,6 +28,10 @@ var rfcolors = ["#FF9900","#0000DD","#DD0000","#006600","#0099FF","#990099"];
 var rfmodes = ["Constant","Lagoon","Reef Crest","Short Pulse","Long Pulse","Nutrient Transport","Tidal Swell","Feeding","Feeding","Night","Storm","Custom","Else"];
 var rfimages= ["constant.png","lagoon.png","reefcrest.png","shortpulse.png","longpulse.png","ntm.png","tsm.png","feeding.png","feeding.png","night.png","storm.png","custom.png","custom.png"];
 var rfmodecolors = ["#00682e","#ffee00","#ffee00","#16365e","#d99593","#eb70ff","#eb70ff","#000000","#000000","#000000","#000000","#000000","#000000"];
+var paramitems = ["lastupdate","forum_username","em","em1","rem","sf","af","t1","t2","t3","ph","sal","orp","phe","hum","leak","wl","wl1","wl2","wl3","wl4","io","c0","c1","c2","c3","c4","c5","c6","c7","atolow","atohigh","pwma","pwmd","pwmao","pwmdo","pwme0","pwme1","pwme2","pwme3","pwme4","pwme5","pwme0o","pwme1o","pwme2o","pwme3o","pwme4o","pwme5o","dcm","dcs","dcd","rfm","rfs","rfd","rfw","rfrb","rfr","rfg","rfb","rfd","r","ron","roff","r1","ron1","roff1","r2","ron2","roff2","r3","ron3","roff3","r4","ron4","roff4","r5","ron5","roff5","r6","ron6","roff6","r7","ron7","roff7","r8","ron8","roff8"]
+var labels = ["t1n","t2n","t3n","phn","saln","orpn","phen","humn","parn","c0n","c1n","c2n","c3n","c4n","c5n","c6n","c7n","atolown","atohighn","pwma1n","pwmd1n","leakn","r1n","r2n","r3n","r4n","r5n","r6n","r7n","r8n","r11n","r12n","r13n","r14n","r15n","r16n","r17n","r18n","r21n","r22n","r23n","r24n","r25n","r26n","r27n","r28n","r31n","r32n","r33n","r34n","r35n","r36n","r37n","r38n","r41n","r42n","r43n","r44n","r45n","r46n","r47n","r48n","r51n","r52n","r53n","r54n","r55n","r56n","r57n","r58n","r61n","r62n","r63n","r64n","r65n","r66n","r67n","r68n","r71n","r72n","r73n","r74n","r75n","r76n","r77n","r78n","r81n","r82n","r83n","r84n","r85n","r86n","r87n","r88n","pwme0n","pwme1n","pwme2n","pwme3n","pwme4n","pwme5n","wln","wl1n","wl2n","wl3n","wl4n","rfwn","rfrbn","rfrn","rfgn","rfbn","rfin","io0n","io1n","io2n","io3n","io4n","io5n"];
+var defaultlabels = ["Temp 1","Temp 2","Temp 3","pH","Salinity","ORP","pH Expansion","Humidity","PAR","Custom Var 0","Custom Var 1","Custom Var 2","Custom Var 3","Custom Var 4","Custom Var 5","Custom Var 6","Custom Var 7","ATO Low","ATO High","Actinic","Daylight","Leak Detector","Port 1","Port 2","Port 3","Port 4","Port 5","Port 6","Port 7","Port 8","Port 11","Port 12","Port 13","Port 14","Port 15","Port 16","Port 17","Port 18","Port 21","Port 22","Port 23","Port 24","Port 25","Port 26","Port 27","Port 28","Port 31","Port 32","Port 33","Port 34","Port 35","Port 36","Port 37","Port 38","Port 41","Port 42","Port 43","Port 44","Port 45","Port 46","Port 47","Port 48","Port 51","Port 52","Port 53","Port 54","Port 55","Port 56","Port 57","Port 58","Port 61","Port 62","Port 63","Port 64","Port 65","Port 66","Port 67","Port 68","Port 71","Port 72","Port 73","Port 74","Port 75","Port 76","Port 77","Port 78","Port 81","Port 82","Port 83","Port 84","Port 85","Port 86","Port 87","Port 88","Channel 0","Channel 1","Channel 2","Channel 3","Channel 4","Channel 5","Channel 0","Channel 1","Channel 2","Channel 3","Channel 4","White","Royal Blue","Red","Green","Blue","Intensity","I/O Channel 0","I/O Channel 1","I/O Channel 2","I/O Channel 3","I/O Channel 4","I/O Channel 5"];
+
 var MemString=new Array(); 
 var MemURL=new Array();
 var im;
@@ -67,7 +71,7 @@ $(document).ready(function(){
 	$(function() {
 		FastClick.attach(document.body);
 	});
-	$("#app_version").html("Reef Angel U-App v1.0.1");
+	$("#app_version").html("Reef Angel U-App v1.0.2");
 
 	for (a=0; a<localStorage.getItem("num_controllers"); a++)
 	{
@@ -78,11 +82,14 @@ $(document).ready(function(){
 	$("#controller_selection").selectmenu('refresh');
 	
 	$("#controller_selection").on('change', function () {
-		localStorage.setItem("controller_name",localStorage.getItem("controller_name_"+$(this).find('option:selected').val()));
-		localStorage.setItem("controller_ip",localStorage.getItem("controller_ip_"+$(this).find('option:selected').val()));
-		localStorage.setItem("controller_port",localStorage.getItem("controller_port_"+$(this).find('option:selected').val()));
-		$('#btn_refresh').attr("data-message","controllerchange")
-		$('#btn_refresh').click();
+		$.mobile.loading( 'show', {
+			text: 'Please wait',
+			textVisible: true,
+			theme: 'b',
+			html: ""
+		});
+		ChangeController($(this).find('option:selected').val());
+		location.reload();
 	});
 
 	$("#pwmdinput").next().children("div").first().css("background-image","-webkit-gradient(linear,left top,left bottom,from(#FF9900),to(#EEEEEE))");
@@ -124,18 +131,6 @@ $(document).ready(function(){
 					});
 					$('#btn_refresh').attr("data-message","");
 					window.location.href="status.html";
-					return false;
-				}
-				if ($('#btn_refresh').attr("data-message") == "controllerchange")
-				{
-					$.mobile.loading( 'show', {
-						text: 'Please wait',
-						textVisible: true,
-						theme: 'b',
-						html: ""
-					});
-					$('#btn_refresh').attr("data-message","");
-					setTimeout( function(){ $('#downloadlabels').click() }, 1000 );
 					return false;
 				}
 			},
@@ -191,7 +186,7 @@ $(document).ready(function(){
 					for (a=0; a<x.childNodes.length; a++)
 					{
 						if (x.childNodes[a].firstChild.data!="null" && x.childNodes[a].firstChild.data!="")
-						localStorage.setItem(x.childNodes[a].nodeName.toLowerCase(), x.childNodes[a].firstChild.data);
+						SaveStorageItem(x.childNodes[a].nodeName.toLowerCase(), x.childNodes[a].firstChild.data);
 					}
 					UpdateLabels();
 				}
@@ -259,6 +254,7 @@ $(document).ready(function(){
 				localStorage.setItem("controller_name_"+num_controller,$("#txt_controller_name").val());
 				localStorage.setItem("controller_ip_"+num_controller,$("#txt_controller_ip").val());
 				localStorage.setItem("controller_port_"+num_controller,$("#txt_controller_port").val());
+				localStorage.setItem("thiscontroller",num_controller);
 				localStorage.setItem("num_controllers",parseInt(num_controller)+1);
 			}
 			$("#controller_form").attr("data-message",-1);
@@ -281,9 +277,7 @@ $(document).ready(function(){
 	});
 
 	$(".controlleritem").on('vclick', function (event) {
-		localStorage.setItem("controller_name",localStorage.getItem("controller_name_"+event.target.id.replace("controller_","")));
-		localStorage.setItem("controller_ip",localStorage.getItem("controller_ip_"+event.target.id.replace("controller_","")));
-		localStorage.setItem("controller_port",localStorage.getItem("controller_port_"+event.target.id.replace("controller_","")));
+		ChangeController(event.target.id.replace("controller_",""));
 		$('#btn_refresh').attr("data-message","status");
 		$('#btn_refresh').click();
     });
@@ -405,8 +399,7 @@ $(document).ready(function(){
 		$("#popupRFWaveMode").popup("open");
 	});
 	
-	$(".wavemodeitem").on('vclick', function () {
-		localStorage.setItem("needrefresh",1);
+	$(".rfwavemodeitem").on('vclick', function () {
 		send_command($(this).attr("data-message"));
 		$("#popupRFWaveMode").popup("close");
 	});
@@ -415,8 +408,7 @@ $(document).ready(function(){
 		$("#popupDCWaveMode").popup("open");
 	});
 	
-	$(".wavemodeitem").on('vclick', function () {
-		localStorage.setItem("needrefresh",1);
+	$(".dcwavemodeitem").on('vclick', function () {
 		send_command($(this).attr("data-message"));
 		$("#popupDCWaveMode").popup("close");
 	});
@@ -670,94 +662,117 @@ $(document).ready(function(){
 	
 });
 
+function ChangeController (id)
+{
+	localStorage.setItem("controller_name",localStorage.getItem("controller_name_"+id));
+	localStorage.setItem("controller_ip",localStorage.getItem("controller_ip_"+id));
+	localStorage.setItem("controller_port",localStorage.getItem("controller_port_"+id));
+	localStorage.setItem("thiscontroller",id);
+	for (a=0;a<paramitems.length;a++)
+		localStorage.setItem(paramitems[a],localStorage.getItem(paramitems[a]+"_"+id));
+	for (a=0;a<labels.length;a++)
+	{
+		if (localStorage.getItem(labels[a]+"_"+id)==null)
+		{
+			localStorage.setItem(labels[a],defaultlabels[a]);
+		}
+		else
+		{
+			localStorage.setItem(labels[a],localStorage.getItem(labels[a]+"_"+id));
+		}
+	}
+}
+
 function WriteStorage (x)
 {
+	SaveStorageItem("lastupdate",new Date());
 	if(x.getElementsByTagName('ID').item(0).hasChildNodes())
-		localStorage.setItem("forum_username",x.getElementsByTagName('ID').item(0).firstChild.data);
-	localStorage.setItem("em",x.getElementsByTagName('EM').item(0).firstChild.data);
-	localStorage.setItem("em1",x.getElementsByTagName('EM1').item(0).firstChild.data);
-	localStorage.setItem("rem",x.getElementsByTagName('REM').item(0).firstChild.data);
-	localStorage.setItem("sf",x.getElementsByTagName('SF').item(0).firstChild.data);
-	localStorage.setItem("af",x.getElementsByTagName('AF').item(0).firstChild.data);
-	localStorage.setItem("t1",x.getElementsByTagName('T1').item(0).firstChild.data);
-	localStorage.setItem("t2",x.getElementsByTagName('T2').item(0).firstChild.data);
-	localStorage.setItem("t3",x.getElementsByTagName('T3').item(0).firstChild.data);
-	localStorage.setItem("ph",x.getElementsByTagName('PH').item(0).firstChild.data);
-	if(x.getElementsByTagName('SAL').length>0) localStorage.setItem("sal",x.getElementsByTagName('SAL').item(0).firstChild.data);
-	if(x.getElementsByTagName('ORP').length>0) localStorage.setItem("orp",x.getElementsByTagName('ORP').item(0).firstChild.data);
-	if(x.getElementsByTagName('PHE').length>0) localStorage.setItem("phe",x.getElementsByTagName('PHE').item(0).firstChild.data);
-	if(x.getElementsByTagName('HUM').length>0) localStorage.setItem("hum",x.getElementsByTagName('HUM').item(0).firstChild.data);
-	if(x.getElementsByTagName('PAR').length>0) localStorage.setItem("par",x.getElementsByTagName('PAR').item(0).firstChild.data);
-	if(x.getElementsByTagName('LEAK').length>0) localStorage.setItem("leak",x.getElementsByTagName('LEAK').item(0).firstChild.data);
-	if(x.getElementsByTagName('WL').length>0) localStorage.setItem("wl",x.getElementsByTagName('WL').item(0).firstChild.data);
-	if(x.getElementsByTagName('WL1').length>0) localStorage.setItem("wl1",x.getElementsByTagName('WL1').item(0).firstChild.data);
-	if(x.getElementsByTagName('WL2').length>0) localStorage.setItem("wl2",x.getElementsByTagName('WL2').item(0).firstChild.data);
-	if(x.getElementsByTagName('WL3').length>0) localStorage.setItem("wl3",x.getElementsByTagName('WL3').item(0).firstChild.data);
-	if(x.getElementsByTagName('WL4').length>0) localStorage.setItem("wl4",x.getElementsByTagName('WL4').item(0).firstChild.data);
-	if(x.getElementsByTagName('IO').length>0) localStorage.setItem("io",x.getElementsByTagName('IO').item(0).firstChild.data);
+		SaveStorageItem("forum_username",x.getElementsByTagName('ID').item(0).firstChild.data);
+	if(x.getElementsByTagName('EM').length>0) SaveStorageItem("em",x.getElementsByTagName('EM').item(0).firstChild.data);
+	if(x.getElementsByTagName('EM1').length>0) SaveStorageItem("em1",x.getElementsByTagName('EM1').item(0).firstChild.data);
+	if(x.getElementsByTagName('REM').length>0) SaveStorageItem("rem",x.getElementsByTagName('REM').item(0).firstChild.data);
+	if(x.getElementsByTagName('SF').length>0) SaveStorageItem("sf",x.getElementsByTagName('SF').item(0).firstChild.data);
+	if(x.getElementsByTagName('AF').length>0) SaveStorageItem("af",x.getElementsByTagName('AF').item(0).firstChild.data);
+	SaveStorageItem("t1",x.getElementsByTagName('T1').item(0).firstChild.data);
+	SaveStorageItem("t2",x.getElementsByTagName('T2').item(0).firstChild.data);
+	SaveStorageItem("t3",x.getElementsByTagName('T3').item(0).firstChild.data);
+	SaveStorageItem("ph",x.getElementsByTagName('PH').item(0).firstChild.data);
+	if(x.getElementsByTagName('SAL').length>0) SaveStorageItem("sal",x.getElementsByTagName('SAL').item(0).firstChild.data);
+	if(x.getElementsByTagName('ORP').length>0) SaveStorageItem("orp",x.getElementsByTagName('ORP').item(0).firstChild.data);
+	if(x.getElementsByTagName('PHE').length>0) SaveStorageItem("phe",x.getElementsByTagName('PHE').item(0).firstChild.data);
+	if(x.getElementsByTagName('HUM').length>0) SaveStorageItem("hum",x.getElementsByTagName('HUM').item(0).firstChild.data);
+	if(x.getElementsByTagName('PAR').length>0) SaveStorageItem("par",x.getElementsByTagName('PAR').item(0).firstChild.data);
+	if(x.getElementsByTagName('LEAK').length>0) SaveStorageItem("leak",x.getElementsByTagName('LEAK').item(0).firstChild.data);
+	if(x.getElementsByTagName('WL').length>0) SaveStorageItem("wl",x.getElementsByTagName('WL').item(0).firstChild.data);
+	if(x.getElementsByTagName('WL1').length>0) SaveStorageItem("wl1",x.getElementsByTagName('WL1').item(0).firstChild.data);
+	if(x.getElementsByTagName('WL2').length>0) SaveStorageItem("wl2",x.getElementsByTagName('WL2').item(0).firstChild.data);
+	if(x.getElementsByTagName('WL3').length>0) SaveStorageItem("wl3",x.getElementsByTagName('WL3').item(0).firstChild.data);
+	if(x.getElementsByTagName('WL4').length>0) SaveStorageItem("wl4",x.getElementsByTagName('WL4').item(0).firstChild.data);
+	if(x.getElementsByTagName('IO').length>0) SaveStorageItem("io",x.getElementsByTagName('IO').item(0).firstChild.data);
 	if(x.getElementsByTagName('C0').length>0)
 	{
-		localStorage.setItem("c0",x.getElementsByTagName('C0').item(0).firstChild.data);
-		localStorage.setItem("c1",x.getElementsByTagName('C1').item(0).firstChild.data);
-		localStorage.setItem("c2",x.getElementsByTagName('C2').item(0).firstChild.data);
-		localStorage.setItem("c3",x.getElementsByTagName('C3').item(0).firstChild.data);
-		localStorage.setItem("c4",x.getElementsByTagName('C4').item(0).firstChild.data);
-		localStorage.setItem("c5",x.getElementsByTagName('C5').item(0).firstChild.data);
-		localStorage.setItem("c6",x.getElementsByTagName('C6').item(0).firstChild.data);
-		localStorage.setItem("c7",x.getElementsByTagName('C7').item(0).firstChild.data);
+		SaveStorageItem("c0",x.getElementsByTagName('C0').item(0).firstChild.data);
+		SaveStorageItem("c1",x.getElementsByTagName('C1').item(0).firstChild.data);
+		SaveStorageItem("c2",x.getElementsByTagName('C2').item(0).firstChild.data);
+		SaveStorageItem("c3",x.getElementsByTagName('C3').item(0).firstChild.data);
+		SaveStorageItem("c4",x.getElementsByTagName('C4').item(0).firstChild.data);
+		SaveStorageItem("c5",x.getElementsByTagName('C5').item(0).firstChild.data);
+		SaveStorageItem("c6",x.getElementsByTagName('C6').item(0).firstChild.data);
+		SaveStorageItem("c7",x.getElementsByTagName('C7').item(0).firstChild.data);
 	}
-	localStorage.setItem("atolow",x.getElementsByTagName('ATOLOW').item(0).firstChild.data);
-	localStorage.setItem("atohigh",x.getElementsByTagName('ATOHIGH').item(0).firstChild.data);
-	localStorage.setItem("pwma",x.getElementsByTagName('PWMA').item(0).firstChild.data);
-	localStorage.setItem("pwmd",x.getElementsByTagName('PWMD').item(0).firstChild.data);
-	localStorage.setItem("pwmao",x.getElementsByTagName('PWMAO').item(0).firstChild.data);
-	localStorage.setItem("pwmdo",x.getElementsByTagName('PWMDO').item(0).firstChild.data);
+	SaveStorageItem("atolow",x.getElementsByTagName('ATOLOW').item(0).firstChild.data);
+	SaveStorageItem("atohigh",x.getElementsByTagName('ATOHIGH').item(0).firstChild.data);
+	if(x.getElementsByTagName('PWMA').length>0) SaveStorageItem("pwma",x.getElementsByTagName('PWMA').item(0).firstChild.data);
+	if(x.getElementsByTagName('PWMD').length>0) SaveStorageItem("pwmd",x.getElementsByTagName('PWMD').item(0).firstChild.data);
+	if(x.getElementsByTagName('PWMAO').length>0) SaveStorageItem("pwmao",x.getElementsByTagName('PWMAO').item(0).firstChild.data);
+	if(x.getElementsByTagName('PWMDO').length>0) SaveStorageItem("pwmdo",x.getElementsByTagName('PWMDO').item(0).firstChild.data);
 	if(x.getElementsByTagName('PWME0').length>0)
 	{
 		for (a=0;a<6;a++)
 		{
-			localStorage.setItem("pwme"+a,x.getElementsByTagName('PWME'+a).item(0).firstChild.data);
-			localStorage.setItem("pwme"+a+"o",x.getElementsByTagName('PWME'+a+'O').item(0).firstChild.data);
+			SaveStorageItem("pwme"+a,x.getElementsByTagName('PWME'+a).item(0).firstChild.data);
+			SaveStorageItem("pwme"+a+"o",x.getElementsByTagName('PWME'+a+'O').item(0).firstChild.data);
 		}
 	}
-	if(x.getElementsByTagName('DCM').length>0) localStorage.setItem("dcm",x.getElementsByTagName('DCM').item(0).firstChild.data);
-	if(x.getElementsByTagName('DCS').length>0) localStorage.setItem("dcs",x.getElementsByTagName('DCS').item(0).firstChild.data);
-	if(x.getElementsByTagName('DCD').length>0) localStorage.setItem("dcd",x.getElementsByTagName('DCD').item(0).firstChild.data);
-	if(x.getElementsByTagName('RFM').length>0) localStorage.setItem("rfm",x.getElementsByTagName('RFM').item(0).firstChild.data);
-	if(x.getElementsByTagName('RFS').length>0) localStorage.setItem("rfs",x.getElementsByTagName('RFS').item(0).firstChild.data);
-	if(x.getElementsByTagName('RFD').length>0) localStorage.setItem("rfd",x.getElementsByTagName('RFD').item(0).firstChild.data);
+	if(x.getElementsByTagName('DCM').length>0) SaveStorageItem("dcm",x.getElementsByTagName('DCM').item(0).firstChild.data);
+	if(x.getElementsByTagName('DCS').length>0) SaveStorageItem("dcs",x.getElementsByTagName('DCS').item(0).firstChild.data);
+	if(x.getElementsByTagName('DCD').length>0) SaveStorageItem("dcd",x.getElementsByTagName('DCD').item(0).firstChild.data);
+	if(x.getElementsByTagName('RFM').length>0) SaveStorageItem("rfm",x.getElementsByTagName('RFM').item(0).firstChild.data);
+	if(x.getElementsByTagName('RFS').length>0) SaveStorageItem("rfs",x.getElementsByTagName('RFS').item(0).firstChild.data);
+	if(x.getElementsByTagName('RFD').length>0) SaveStorageItem("rfd",x.getElementsByTagName('RFD').item(0).firstChild.data);
 	
 	if(x.getElementsByTagName('RFW').length>0)
 	{
 		for (a=0;a<6;a++)
 		{
-			localStorage.setItem(rffields[a],x.getElementsByTagName(rffields[a].toUpperCase()).item(0).firstChild.data);
-			localStorage.setItem(rffields[a]+"o",x.getElementsByTagName(rffields[a].toUpperCase()+'O').item(0).firstChild.data);
+			SaveStorageItem(rffields[a],x.getElementsByTagName(rffields[a].toUpperCase()).item(0).firstChild.data);
+			SaveStorageItem(rffields[a]+"o",x.getElementsByTagName(rffields[a].toUpperCase()+'O').item(0).firstChild.data);
 		}
 	}
-	localStorage.setItem("r",x.getElementsByTagName('R').item(0).firstChild.data);
-	localStorage.setItem("ron",x.getElementsByTagName('RON').item(0).firstChild.data);
-	localStorage.setItem("roff",x.getElementsByTagName('ROFF').item(0).firstChild.data);
+	SaveStorageItem("r",x.getElementsByTagName('R').item(0).firstChild.data);
+	SaveStorageItem("ron",x.getElementsByTagName('RON').item(0).firstChild.data);
+	SaveStorageItem("roff",x.getElementsByTagName('ROFF').item(0).firstChild.data);
 	if(localStorage.getItem("rem")>0)
 	{
 		for (a=1;a<=8;a++)
 		{
-			localStorage.setItem("r"+a,x.getElementsByTagName('R'+a).item(0).firstChild.data);
-			localStorage.setItem("ron"+a,x.getElementsByTagName('RON'+a).item(0).firstChild.data);
-			localStorage.setItem("roff"+a,x.getElementsByTagName('ROFF'+a).item(0).firstChild.data);						
+			SaveStorageItem("r"+a,x.getElementsByTagName('R'+a).item(0).firstChild.data);
+			SaveStorageItem("ron"+a,x.getElementsByTagName('RON'+a).item(0).firstChild.data);
+			SaveStorageItem("roff"+a,x.getElementsByTagName('ROFF'+a).item(0).firstChild.data);						
 		}
 	}
 	if (localStorage.getItem("lastem")!=localStorage.getItem("em") || localStorage.getItem("lastem1")!=localStorage.getItem("em1"))
 	{
-		localStorage.setItem("lastem",localStorage.getItem("em"));
-		localStorage.setItem("lastem1",localStorage.getItem("em1"));
+		SaveStorageItem("lastem",localStorage.getItem("em"));
+		SaveStorageItem("lastem1",localStorage.getItem("em1"));
 		location.reload();
 	}
 	ReadStorage();
 }
 
-function ReadStorage(p)
+function ReadStorage()
 {
+	$('#lastupdate').html("Last update: " + new Date(localStorage.getItem("lastupdate")).toString("MM/dd/yy hh:mm tt"));
 	if (localStorage.getItem("forum_username")!=null)
 		$('#myreefangelid').html(localStorage.getItem("forum_username"));
 	else
@@ -905,12 +920,9 @@ function ReadStorage(p)
 
 function UpdateLabels()
 {
-	var labels = ["t1n","t2n","t3n","phn","saln ","orpn","phen","humn","parn","c0n","c1n","c2n","c3n","c4n","c5n","c6n","c7n","atolown","atohighn","pwma1n","pwmd1n","leakn","r1n","r2n","r3n","r4n","r5n","r6n","r7n","r8n","r11n","r12n","r13n","r14n","r15n","r16n","r17n","r18n","r21n","r22n","r23n","r24n","r25n","r26n","r27n","r28n","r31n","r32n","r33n","r34n","r35n","r36n","r37n","r38n","r41n","r42n","r43n","r44n","r45n","r46n","r47n","r48n","r51n","r52n","r53n","r54n","r55n","r56n","r57n","r58n","r61n","r62n","r63n","r64n","r65n","r66n","r67n","r68n","r71n","r72n","r73n","r74n","r75n","r76n","r77n","r78n","r81n","r82n","r83n","r84n","r85n","r86n","r87n","r88n","pwme0n","pwme1n","pwme2n","pwme3n","pwme4n","pwme5n","wln","wl1n","wl2n","wl3n","wl4n","rfwn","rfrbn","rfrn","rfgn","rfbn","rfin","io0n","io1n","io2n","io3n","io4n","io5n"];
-	var defaultlabels = ["Temp 1","Temp 2","Temp 3","pH","Salinity","ORP","pH Expansion","Humidity","PAR","Custom Var 0","Custom Var 1","Custom Var 2","Custom Var 3","Custom Var 4","Custom Var 5","Custom Var 6","Custom Var 7","ATO Low","ATO High","Actinic","Daylight","Leak Detector","Port 1","Port 2","Port 3","Port 4","Port 5","Port 6","Port 7","Port 8","Port 11","Port 12","Port 13","Port 14","Port 15","Port 16","Port 17","Port 18","Port 21","Port 22","Port 23","Port 24","Port 25","Port 26","Port 27","Port 28","Port 31","Port 32","Port 33","Port 34","Port 35","Port 36","Port 37","Port 38","Port 41","Port 42","Port 43","Port 44","Port 45","Port 46","Port 47","Port 48","Port 51","Port 52","Port 53","Port 54","Port 55","Port 56","Port 57","Port 58","Port 61","Port 62","Port 63","Port 64","Port 65","Port 66","Port 67","Port 68","Port 71","Port 72","Port 73","Port 74","Port 75","Port 76","Port 77","Port 78","Port 81","Port 82","Port 83","Port 84","Port 85","Port 86","Port 87","Port 88","Channel 0","Channel 1","Channel 2","Channel 3","Channel 4","Channel 5","Channel 0","Channel 1","Channel 2","Channel 3","Channel 4","White","Royal Blue","Red","Green","Blue","Intensity","I/O Channel 0","I/O Channel 1","I/O Channel 2","I/O Channel 3","I/O Channel 4","I/O Channel 5"];
-	
 	for (a=0;a<labels.length;a++)
 	{
-		if (localStorage.getItem(labels[a])==null) localStorage.setItem(labels[a],defaultlabels[a]);
+		if (localStorage.getItem(labels[a])==null) SaveStorageItem(labels[a],defaultlabels[a]);
 		$('#'+labels[a]).html(localStorage.getItem(labels[a]));		
 	}
 	for (a=0;a<6;a++)
@@ -1216,7 +1228,7 @@ function CreateChart()
 	seriesID = 0;
 
 	$.each(names, function (i, name) {
-		$.getJSON('http://forum.reefangel.com/status/jsonp.aspx?id=reefangel&filter=' + name.toLowerCase() + '&callback=?', function (data) {
+		$.getJSON('http://forum.reefangel.com/status/jsonp.aspx?id=' + localStorage.getItem("forum_username") + '&filter=' + name.toLowerCase() + '&callback=?', function (data) {
 			var pcolor;
 			var tname;
 			var ydec;
@@ -1415,4 +1427,10 @@ function getintvalue(d,i)
 	d=d.replace("<MEM>","")
 	d=d.replace("</MEM>","")
 	return parseInt(d.substr((i+1)*2,2) + d.substr(i*2,2),16);
+}
+
+function SaveStorageItem (item, value)
+{
+	localStorage.setItem(item,value);
+	localStorage.setItem(item+"_"+localStorage.getItem("thiscontroller"),value);
 }

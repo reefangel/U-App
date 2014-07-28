@@ -30,6 +30,7 @@
         <script src="js/jquery.mobile-1.4.2.min.js"></script> 
         <script src="js/jquery.knob.js"></script>
         <script src="js/fastclick.js"></script>
+        <script src="js/date.js"></script>
 
         <title>Reef Angel U-App</title>
     </head>
@@ -68,6 +69,7 @@
                     </div>
                     <div id="parameterstab" class="ui-content">
                         <div class=paramstable id=paramslist>
+                            <div><div id=lastupdate></div></center></div>
                             <div><div class=paramslabel id=myreefangelidn>Forum ID</div><div class=paramsvalue id=myreefangelid></div></div>
                             <div><div class=paramslabel id=t1n></div><div class=paramsvalue id=t1></div></div>
                             <div><div class=paramslabel id=t2n></div><div class=paramsvalue id=t2></div></div>
@@ -180,15 +182,15 @@
                     </div>
                     <div class="ui-content" role="main">
                     	<ul data-role="listview" data-inset="true">
-                            <li><a href="#" class="wavemodeitem" data-message="mb255,0">Constant</a></li>
-                            <li><a href="#" class="wavemodeitem" data-message="mb255,1">Lagoon</a></li>
-                            <li><a href="#" class="wavemodeitem" data-message="mb255,2">ReefCrest</a></li>
-                            <li><a href="#" class="wavemodeitem" data-message="mb255,3">Short Pulse</a></li>
-                            <li><a href="#" class="wavemodeitem" data-message="mb255,4">Long Pulse</a></li>
-                            <li><a href="#" class="wavemodeitem" data-message="mb255,5">Nutrient Transport</a></li>
-                            <li><a href="#" class="wavemodeitem" data-message="mb255,6">Tidal Swell</a></li>
-                            <li><a href="#" class="wavemodeitem" data-message="mb255,10">Storm</a></li>
-                            <li><a href="#" class="wavemodeitem" data-message="mb255,11">Custom</a></li>
+                            <li><a href="#" class="rfwavemodeitem" data-message="mb255,0">Constant</a></li>
+                            <li><a href="#" class="rfwavemodeitem" data-message="mb255,1">Lagoon</a></li>
+                            <li><a href="#" class="rfwavemodeitem" data-message="mb255,2">ReefCrest</a></li>
+                            <li><a href="#" class="rfwavemodeitem" data-message="mb255,3">Short Pulse</a></li>
+                            <li><a href="#" class="rfwavemodeitem" data-message="mb255,4">Long Pulse</a></li>
+                            <li><a href="#" class="rfwavemodeitem" data-message="mb255,5">Nutrient Transport</a></li>
+                            <li><a href="#" class="rfwavemodeitem" data-message="mb255,6">Tidal Swell</a></li>
+                            <li><a href="#" class="rfwavemodeitem" data-message="mb255,10">Storm</a></li>
+                            <li><a href="#" class="rfwavemodeitem" data-message="mb255,11">Custom</a></li>
                         </ul>
                         <a class="ui-btn ui-corner-all ui-shadow ui-btn-inline ui-btn-b" href="#" data-rel="back">Cancel</a>
                     </div>
@@ -199,16 +201,16 @@
                     </div>
                     <div class="ui-content" role="main">
                     	<ul data-role="listview" data-inset="true">
-                            <li><a href="#" class="wavemodeitem" data-message="mb337,0">Constant</a></li>
-                            <li><a href="#" class="wavemodeitem" data-message="mb337,1">Lagoon</a></li>
-                            <li><a href="#" class="wavemodeitem" data-message="mb337,2">ReefCrest</a></li>
-                            <li><a href="#" class="wavemodeitem" data-message="mb337,3">Short Pulse</a></li>
-                            <li><a href="#" class="wavemodeitem" data-message="mb337,4">Long Pulse</a></li>
-                            <li><a href="#" class="wavemodeitem" data-message="mb337,5">Nutrient Transport</a></li>
-                            <li><a href="#" class="wavemodeitem" data-message="mb337,6">Tidal Swell</a></li>
-                            <li><a href="#" class="wavemodeitem" data-message="mb337,10">Storm</a></li>
-                            <li><a href="#" class="wavemodeitem" data-message="mb337,11">Custom</a></li>
-                            <li><a href="#" class="wavemodeitem" data-message="mb337,12">Else</a></li>
+                            <li><a href="#" class="dcwavemodeitem" data-message="mb337,0">Constant</a></li>
+                            <li><a href="#" class="dcwavemodeitem" data-message="mb337,1">Lagoon</a></li>
+                            <li><a href="#" class="dcwavemodeitem" data-message="mb337,2">ReefCrest</a></li>
+                            <li><a href="#" class="dcwavemodeitem" data-message="mb337,3">Short Pulse</a></li>
+                            <li><a href="#" class="dcwavemodeitem" data-message="mb337,4">Long Pulse</a></li>
+                            <li><a href="#" class="dcwavemodeitem" data-message="mb337,5">Nutrient Transport</a></li>
+                            <li><a href="#" class="dcwavemodeitem" data-message="mb337,6">Tidal Swell</a></li>
+                            <li><a href="#" class="dcwavemodeitem" data-message="mb337,10">Storm</a></li>
+                            <li><a href="#" class="dcwavemodeitem" data-message="mb337,11">Custom</a></li>
+                            <li><a href="#" class="dcwavemodeitem" data-message="mb337,12">Else</a></li>
                         </ul>
                         <a class="ui-btn ui-corner-all ui-shadow ui-btn-inline ui-btn-b" href="#" data-rel="back">Cancel</a>
                     </div>
